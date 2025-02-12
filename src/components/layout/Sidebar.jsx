@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, LayoutDashboard, HardDrive, FileCode, PenTool as Tool, Users, ClipboardList, Bell, FileText, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Menu, LayoutDashboard, HardDrive, FileCode, PenTool as Tool, Users, ClipboardList, Bell, FileText, Settings } from 'lucide-react';
 import NavItem from './NavItem';
 
 const navItems = [
@@ -19,12 +19,12 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
       isCollapsed ? 'w-20' : 'w-64'
     } fixed left-0 top-0`}>
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        {!isCollapsed && <h1 className="text-xl font-bold text-gray-800">Assets</h1>}
+        {!isCollapsed && <h1 className="text-xl font-bold text-gray-700">NEXUS</h1>}
         <button
           onClick={toggleSidebar}
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isCollapsed ? <Menu size={20} /> : <Menu size={20} />}
         </button>
       </div>
 

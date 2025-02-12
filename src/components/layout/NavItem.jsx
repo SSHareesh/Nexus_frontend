@@ -6,8 +6,8 @@ const NavItem = ({ icon: Icon, label, count = 0, isCollapsed }) => {
     <div className="group relative">
       <Link
         to={`/${label.toLowerCase().replace(/\s+/g, '-')}`}
-        className={`flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors ${
-          label === 'Dashboard' ? 'bg-blue-50 text-blue-600' : ''
+        className={`flex items-center space-x-3 p-3 rounded-lg text-grey-500 hover:bg-blue-100 hover:text-blue-600 transition-colors ${
+          label === 'Dashboard'  ? 'bg-blue-600 text-white' :''
         }`}
       >
         <Icon size={20} />
