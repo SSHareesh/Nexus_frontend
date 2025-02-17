@@ -68,7 +68,7 @@ function HardwareAssets() {
                 {filterOptions.map((filter, index) => (
                   <button
                     key={index}
-                    className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-200  ${
+                    className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-200 ${
                       selectedFilter === filter ? "font-bold" : ""
                     }`}
                     onClick={() => {
@@ -90,7 +90,6 @@ function HardwareAssets() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="w-full text-left border-collapse">
           <thead>
