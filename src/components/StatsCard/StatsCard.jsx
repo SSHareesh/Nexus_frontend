@@ -1,3 +1,4 @@
+import { AlertTriangle } from 'lucide-react';
 import React from 'react';
 
 const StatsCard = ({ title, value, change, icon: Icon }) => {
@@ -10,7 +11,9 @@ const StatsCard = ({ title, value, change, icon: Icon }) => {
         </div>
         <div className="bg-blue-50 p-3 rounded-lg">
           <Icon size={24} className="text-blue-500" />
+         
         </div>
+      
       </div>
     </div>
   );

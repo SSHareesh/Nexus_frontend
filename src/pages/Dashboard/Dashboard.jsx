@@ -1,0 +1,48 @@
+import React, { useEffect, useState } from 'react';
+import StatsCard from '../../components/StatsCard/StatsCard';
+import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor } from 'lucide-react';
+import { fetchCounts } from '../../utils/api';
+
+function Dashboard() {
+  const [counts, setCounts] = useState({});
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchCounts();
+      if (data) {
+        setCounts(data);
+      }
+    };
+
+    getData();
+  }, []);
+
+  const stats = [
+    { title: 'Total Assets', value: counts.assetmanage || '0', icon: Package },
+    { title: 'Disposed', value: counts.disposal || '0', icon: Trash2 },
+    { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode },
+    { title: 'In Stock', value: counts.in_out || '0', icon: Boxes },
+    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench },
+    { title: 'User Details', value: counts.userdetails || '0', icon: AlertTriangle },
+    { title: 'In Use', value: counts.inuse || '0', icon: HardDrive },
+  ];
+
+  return (
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Notifications
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default Dashboard;
