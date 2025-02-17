@@ -19,12 +19,13 @@ function Dashboard() {
 
   const stats = [
     { title: 'Total Assets', value: counts.assetmanage || '0', icon: Package },
+    { title: 'Expiring Licenses', value: counts.expiring || '0', icon: AlertTriangle },
+    { title: 'In Stock', value: counts.stock || '0', icon: Boxes },
+    { title: 'Hardware Assets', value: counts.in_out || '0', icon: Monitor },
+    { title: 'Assigned', value: counts.inuse || '0', icon: HardDrive },
+    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench },
     { title: 'Disposed', value: counts.disposal || '0', icon: Trash2 },
     { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode },
-    { title: 'In Stock', value: counts.in_out || '0', icon: Boxes },
-    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench },
-    { title: 'User Details', value: counts.userdetails || '0', icon: AlertTriangle },
-    { title: 'In Use', value: counts.inuse || '0', icon: HardDrive },
   ];
 
   return (
