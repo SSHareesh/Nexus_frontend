@@ -1,14 +1,14 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, Menu, LayoutDashboard, HardDrive, FileCode, PenTool as Tool, Users, ClipboardList, Bell, FileText, Settings } from 'lucide-react';
+import {  Menu,Wrench, LayoutDashboard,  Monitor, FileCode,NotebookPen, Users, ClipboardList, Bell, FileText, Settings } from 'lucide-react';
 import NavItem from './NavItem';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', count: 0 },
-  { icon: HardDrive, label: 'Hardware Assets', count: 0 },
+  { icon: Monitor, label: 'Hardware Assets', count: 0 },
   { icon: FileCode, label: 'Software Assets', count: 0 },
-  { icon: Tool, label: 'Maintenance', count: 0 },
+  { icon: Wrench, label: 'Maintenance', count: 0 },
   { icon: Users, label: 'Employees', count: 0 },
-  { icon: ClipboardList, label: 'Audit Logs', count: 0 },
+  { icon: NotebookPen, label: 'Audit Logs', count: 0 },
   { icon: Bell, label: 'Notifications', count: 5 },
   { icon: FileText, label: 'Report', count: 0 }
 ];

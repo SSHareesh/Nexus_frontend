@@ -1,6 +1,6 @@
 import React from 'react';
-import StatsCard from '../components/dashboard/StatsCard';
-import { Package, HardDrive, FileCode, PenTool as Tool, Trash2, AlertTriangle } from 'lucide-react';
+import StatsCard from '../../components/StatsCard/StatsCard';
+import { Package,Boxes, HardDrive, FileCode,  Wrench, Trash2, AlertTriangle, Monitor } from 'lucide-react';
 
 function Dashboard() {
   const stats = [
@@ -10,40 +10,41 @@ function Dashboard() {
       icon: Package
     },
     {
-      title: 'In Use',
-      value: '1000',
-      icon: HardDrive
-    },
-    {
-      title: 'Maintenance',
-      value: '30',
-      icon: Tool
-    },
-    {
-      title: 'Depreciated',
-      value: '5',
-      icon: AlertTriangle
-    },
-    {
-      title: 'Hardware Assets',
-      value: '500',
-      icon: HardDrive
-    },
-    {
-      title: 'Software Assets',
-      value: '734',
-      icon: FileCode
-    },
-    {
       title: 'Expiring Licenses',
       value: '15',
       icon: AlertTriangle
     },
     {
+      title: 'In Stock',
+      value: '5',
+      icon: Boxes
+    },
+    {
+      title: 'Hardware Assets',
+      value: '500',
+      icon: Monitor
+    },
+        
+    {
+      title: 'Assigned',
+      value: '900',
+      icon: HardDrive
+    },
+    {
+      title: 'Maintenance',
+      value: '30',
+      icon: Wrench
+    },
+    {
       title: 'Disposed',
       value: '15',
       icon: Trash2
-    }
+    },
+    {
+      title: 'Software Assets',
+      value: '734',
+      icon: FileCode 
+    },
   ];
 
   return (
@@ -57,13 +58,11 @@ function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <StatsCard
-            key={index}
+          <StatsCard key={index}
             title={stat.title}
             value={stat.value}
-            change={stat.change}
-            icon={stat.icon}
-          />
+            change={stat.change}  
+            icon={stat.icon}/>
         ))}
       </div>
     </div>
