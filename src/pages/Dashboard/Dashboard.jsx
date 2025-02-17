@@ -1,5 +1,5 @@
 import React from 'react';
-import StatsCard from '../components/dashboard/StatsCard';
+import StatsCard from '../../components/StatsCard/StatsCard';
 import { Package,Boxes, HardDrive, FileCode,  Wrench, Trash2, AlertTriangle, Monitor } from 'lucide-react';
 
 function Dashboard() {
@@ -40,7 +40,7 @@ function Dashboard() {
       value: '15',
       icon: Trash2
     },
-     {
+    {
       title: 'Software Assets',
       value: '734',
       icon: FileCode 
