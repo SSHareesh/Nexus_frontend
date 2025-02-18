@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Filter, Search } from "lucide-react";
+import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
+import { fetchAssets } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+
 
 function HardwareAssets() {
   const navigate = useNavigate();
@@ -10,26 +12,18 @@ function HardwareAssets() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/assets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch assets");
-        }
-        const responseData = await response.json();
-        console.log("Fetched Data:", responseData); 
-  
-        if (Array.isArray(responseData.data)) {
-          setAssets(responseData.data);
-        } else {
-          console.error("Fetched data is not an array", responseData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    const getAssets = async () => {
+      const response = await fetchAssets();
+      console.log("Fetched data:", response);  
+      
+      if (response && Array.isArray(response.data)) {
+        setAssets(response.data); 
+      } else {
+        console.error("Fetched data is not an array:", response);
+        setAssets([]);  
       }
     };
-  
-    fetchData();
+    getAssets();
   }, []);
   
   
@@ -157,12 +151,51 @@ function HardwareAssets() {
                     {asset.assigneduserid ? asset.assigneduserid : " "}
                   </td>
                   <td className="px-6 py-4 border-b">{formatDate(asset.lastcheckoutdate)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                  No assets found.
+               {/* Actions Column */}
+            <td className="px-6 py-4 border-b flex space-x-2">
+              {/* View More Button */}
+              <button
+                className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
+                title="View More"
+                onClick={() => handleViewMore(asset)}>
+                <Eye size={18} />
+              </button>
+
+              {/* Delete Button */}
+              <button
+                className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                title="Delete"
+                onClick={() => handleDelete(asset.assetid)} >
+                <Trash2 size={18} />
+              </button>
+
+              {/* Dispose Button */}
+              <button
+                className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                title="Dispose"
+                onClick={() => handleDispose(asset.assetid)}>
+                <Archive size={18} />
+              </button>
+
+              {/* Check-in / Check-out Button */}
+              <button
+                className={`p-2 rounded ${
+                  asset.lastcheckoutdate
+                    ? "bg-green-100 text-green-600 hover:bg-green-200"
+                    : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                }`}
+                title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
+                onClick={() => handleCheckInOut(asset)}
+              >
+                {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
+              </button>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+            No assets found.
                 </td>
               </tr>
             )}
