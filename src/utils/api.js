@@ -20,6 +20,16 @@ export const fetchCounts = async () => {
   }
 };
 
+export const fetchAssets = async () => {
+  try {
+    const response = await api.get('/assets');
+    return response.data.data; // Return only asset data
+  } catch (error) {
+    console.error('Error fetching assets:', error);
+    return []; // Return empty array on error
+  }
+};
+
 
 
 // Export API instance for custom calls if needed
