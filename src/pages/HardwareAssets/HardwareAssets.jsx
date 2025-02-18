@@ -1,50 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { Plus, Filter, Search, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
+import { fetchAssets } from "../../utils/api";
 
 function HardwareAssets() {
+  const navigate = useNavigate();  // Declare navigate hook
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/assets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch assets");
-        }
-        const responseData = await response.json();
-        if (Array.isArray(responseData.data)) {
-          setAssets(responseData.data);
-        } else {
-          console.error("Fetched data is not an array", responseData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    const getAssets = async () => {
+      const response = await fetchAssets();
+      console.log("Fetched data:", response);  // Log the data
+      
+      if (response && Array.isArray(response.data)) {
+        setAssets(response.data);
+      } else {
+        console.error("Fetched data is not an array:", response);
+        setAssets([]);
       }
     };
-    fetchData();
+    getAssets();
   }, []);
 
-  const filterOptions = ["inStock", "Assigned", "Maintenance", "Disposed"];
-
-  const toggleFilter = (filter) => {
-    setSelectedFilters((prevFilters) =>
-      prevFilters.includes(filter)
-        ? prevFilters.filter((f) => f !== filter)
-        : [...prevFilters, filter]
-    );
+  const handleViewMore = (asset) => {
+    // Navigate to the EditHardware page with asset id as a parameter
+    navigate(`/EditHardware/${asset.assetid}`);
   };
 
-  const removeFilter = (filter) => {
-    setSelectedFilters((prevFilters) => prevFilters.filter((f) => f !== filter));
-  };
+  const filterOptions = [
+    "All",
+    "In Stock",
+    "Assigned",
+    "Under Maintenance",
+    "Disposed",
+  ];
 
   const filteredAssets = assets.filter((asset) => {
     const normalizedStatus = asset.status.trim().toLowerCase();
     const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilters.length === 0 || selectedFilters.includes(asset.status);
+    const matchesFilter =
+      selectedFilter === "All" ||
+      selectedFilter === "" ||
+      (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
+      (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
+      (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
+      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+
     return matchesSearch && matchesFilter;
   });
 
@@ -70,24 +74,16 @@ function HardwareAssets() {
               placeholder="Search assets..."
               className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+              onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
 
-          <div className="flex items-center space-x-2">
-            {selectedFilters.map((filter, index) => (
-              <div key={index} className="flex items-center bg-gray-200 px-3 py-1 rounded-lg">
-                <span className="mr-2">{filter}</span>
-                <X size={16} className="cursor-pointer text-black" onClick={() => removeFilter(filter)} />
-              </div>
-            ))}
-          </div>
-
+          {/* Filter Dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="px-4 py-2 flex items-center bg-gray-200 rounded-lg hover:bg-gray-300 transition">
-              <Filter className="mr-2" size={18} /> Filters
+              <Filter className="mr-2" size={18} />
+              Filters
             </button>
             {showFilters && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-2">
@@ -95,9 +91,12 @@ function HardwareAssets() {
                   <button
                     key={index}
                     className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-200 ${
-                      selectedFilters.includes(filter) ? "font-bold" : ""
+                      selectedFilter === filter ? "font-bold" : ""
                     }`}
-                    onClick={() => toggleFilter(filter)}>
+                    onClick={() => {
+                      setSelectedFilter(filter);
+                      setShowFilters(false);
+                    }}>
                     {filter}
                   </button>
                 ))}
@@ -105,8 +104,10 @@ function HardwareAssets() {
             )}
           </div>
 
+          {/* Add New Button */}
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            <Plus className="inline-block mr-2" size={18} /> Add New
+            <Plus className="inline-block mr-2" size={18} />
+            Add New
           </button>
         </div>
       </div>
@@ -121,6 +122,7 @@ function HardwareAssets() {
               <th className="px-6 py-3 border-b">OS</th>
               <th className="px-6 py-3 border-b">Assigned User</th>
               <th className="px-6 py-3 border-b">Last CheckOut</th>
+              <th className="px-6 py-3 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -130,19 +132,73 @@ function HardwareAssets() {
                   <td className="px-6 py-4 border-b">{asset.assetid}</td>
                   <td className="px-6 py-4 border-b">{asset.assettype}</td>
                   <td className="px-6 py-4 border-b">
-                    <span className="px-2 py-1 text-xs rounded bg-blue-200 text-blue-800">
+                    <span
+                      className={`px-2 py-1 text-xs rounded ${
+                        asset.status === "In Stock"
+                          ? "bg-green-200 text-green-800"
+                          : asset.status === "Assigned"
+                          ? "bg-yellow-200 text-yellow-800"
+                          : asset.status === "Maintenance"
+                          ? "bg-orange-200 text-orange-800"
+                          : asset.status === "Disposed" || "disposed"
+                          ? "bg-red-200 text-red-800"
+                          : "bg-blue-200 text-blue-800"
+                      }`}>
                       {asset.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 border-b">{asset.operatingsystem}</td>
-                  <td className="px-6 py-4 border-b">{asset.assigneduserid || " "}</td>
+                  <td className="px-6 py-4 border-b">
+                    {asset.assigneduserid ? asset.assigneduserid : " "}
+                  </td>
                   <td className="px-6 py-4 border-b">{formatDate(asset.lastcheckoutdate)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                  No assets found.
+                  <td className="px-6 py-4 border-b flex space-x-2">
+                    {/* View More Button */}
+                    <button
+                      className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
+                      title="View More"
+                      onClick={() => handleViewMore(asset)}
+                    >
+                      <Eye size={18} />
+                    </button>
+
+              {/* Delete Button */}
+              <button
+                className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                title="Delete"
+                onClick={() => handleDelete(asset.assetid)}
+              >
+                <Trash2 size={18} />
+              </button>
+
+              {/* Dispose Button */}
+              <button
+                className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                title="Dispose"
+                onClick={() => handleDispose(asset.assetid)}
+              >
+                <Archive size={18} />
+              </button>
+
+              {/* Check-in / Check-out Button */}
+              <button
+                className={`p-2 rounded ${
+                  asset.lastcheckoutdate
+                    ? "bg-green-100 text-green-600 hover:bg-green-200"
+                    : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                }`}
+                title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
+                onClick={() => handleCheckInOut(asset)}
+              >
+                {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
+              </button>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+            No assets found.
                 </td>
               </tr>
             )}
