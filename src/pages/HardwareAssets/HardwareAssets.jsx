@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Filter, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function HardwareAssets() {
+  const navigate = useNavigate();
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -15,9 +17,8 @@ function HardwareAssets() {
           throw new Error("Failed to fetch assets");
         }
         const responseData = await response.json();
-        console.log("Fetched Data:", responseData); // Debugging log
+        console.log("Fetched Data:", responseData); 
   
-        // Ensure the data field exists and is an array
         if (Array.isArray(responseData.data)) {
           setAssets(responseData.data);
         } else {
@@ -31,7 +32,7 @@ function HardwareAssets() {
     fetchData();
   }, []);
   
-
+  
   const filterOptions = [
     "All",
     "In Stock",
@@ -110,7 +111,7 @@ function HardwareAssets() {
 
           {/* Add New Button */}
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            <Plus className="inline-block mr-2" size={18} />
+            <Plus className="inline-block mr-2" size={18} onClick={() => navigate("/AddHardwareAsset")} />
             Add New
           </button>
         </div>

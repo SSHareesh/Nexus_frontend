@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api'; // Update this if needed
+const API_BASE_URL = 'http://localhost:5000/api'; 
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,11 +9,10 @@ const api = axios.create({
   },
 });
 
-// Fetch all counts for the dashboard
 export const fetchCounts = async () => {
   try {
     const response = await api.get('/count');
-    return response.data.counts; // Extract only the counts object
+    return response.data.counts; 
   } catch (error) {
     console.error('Error fetching counts:', error);
     return {};
@@ -22,5 +21,4 @@ export const fetchCounts = async () => {
 
 
 
-// Export API instance for custom calls if needed
 export default api;
