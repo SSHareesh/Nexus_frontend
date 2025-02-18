@@ -42,7 +42,7 @@ const NavItem = ({ icon: Icon, label, count = 0, isCollapsed }) => {
   const paths = {
     Dashboard: "/",
     "Hardware Assets": "/HardwareAssets",
-    "Software Assets": "/software-assets",
+    "Software Assets": "/SoftwareAssets",
     "Assigned Assets": "/assigned-assets",
     "In Stock": "/in-stock",
     "Maintenance": "/maintenance",
@@ -74,7 +74,7 @@ const NavItem = ({ icon: Icon, label, count = 0, isCollapsed }) => {
         )}
       </Link>
 
-      {/* Tooltip for Collapsed Mode */}
+   
       {isCollapsed && (
         <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 p-2 bg-white rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity invisible group-hover:visible z-50">
           <span className="whitespace-nowrap text-gray-700">{label}</span>
