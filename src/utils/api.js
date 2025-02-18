@@ -1,45 +1,44 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_BASE_URL = "http://localhost:5000/api";
+const BASE_URL = 'http://localhost:5000/api'; // Adjust the port if needed
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const api = {
+    // Asset Routes
+    getAssets: () => axios.get(`${BASE_URL}/assets`),
+    getAssetById: (id) => axios.get(`${BASE_URL}/assets/${id}`),
+    createAsset: (data) => axios.post(`${BASE_URL}/assets`, data),
+    updateAssetById: (id, data) => axios.put(`${BASE_URL}/assets/${id}`, data),
+    deleteAssetById: (id) => axios.delete(`${BASE_URL}/assets/${id}`),
 
-// ✅ Fetch counts for Dashboard
-export const fetchCounts = async () => {
-  try {
-    const response = await api.get("/count");
-    return response.data.counts || {}; // Ensure only counts are returned
-  } catch (error) {
-    console.error("Error fetching counts:", error);
-    return {};
-  }
+    // Software Routes
+    getSoftwareAssets: () => axios.get(`${BASE_URL}/software`),
+    getSoftwareById: (id) => axios.get(`${BASE_URL}/software/${id}`),
+    createSoftware: (data) => axios.post(`${BASE_URL}/software`, data),
+    updateSoftwareById: (id, data) => axios.put(`${BASE_URL}/software/${id}`, data),
+    deleteSoftwareById: (id) => axios.delete(`${BASE_URL}/software/${id}`),
+
+    // User Routes
+    getUsers: () => axios.get(`${BASE_URL}/users`),
+    getUserById: (id) => axios.get(`${BASE_URL}/users/${id}`),
+    createUser: (data) => axios.post(`${BASE_URL}/users`, data),
+    updateUserById: (id, data) => axios.put(`${BASE_URL}/users/${id}`, data),
+    deleteUserById: (id) => axios.delete(`${BASE_URL}/users/${id}`),
+
+    // Notification Routes
+    getNotifications: () => axios.get(`${BASE_URL}/notifications`),
+    createNotification: (data) => axios.post(`${BASE_URL}/notifications`, data),
+    deleteNotificationById: (id) => axios.delete(`${BASE_URL}/notifications/${id}`),
+
+    // Maintenance Routes
+    getMaintenanceRecords: () => axios.get(`${BASE_URL}/maintenance`),
+    createMaintenanceRecord: (data) => axios.post(`${BASE_URL}/maintenance`, data),
+    updateMaintenanceRecordById: (id, data) => axios.put(`${BASE_URL}/maintenance/${id}`, data),
+    deleteMaintenanceRecordById: (id) => axios.delete(`${BASE_URL}/maintenance/${id}`),
+
+    // Count Routes
+    getCounts: () => axios.get(`${BASE_URL}/count`),
+    getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`)
 };
 
-// ✅ Fetch all hardware assets for HardwareAssets.jsx
-export const fetchAssets = async () => {
-  try {
-    const response = await api.get("/assets/");
-    return response.data || []; // Ensure an array is returned
-  } catch (error) {
-    console.error("Error fetching assets:", error);
-    return [];
-  }
-};
-
-// ✅ Fetch a single asset by ID
-export const fetchAssetById = async (id) => {
-  try {
-    const response = await api.get(`/assets/${id}`);
-    return response.data || null; // Return null if not found
-  } catch (error) {
-    console.error(`Error fetching asset with ID ${id}:`, error);
-    return null;
-  }
-};
-
+// Ensure proper export
 export default api;
