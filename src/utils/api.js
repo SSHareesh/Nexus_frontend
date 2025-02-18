@@ -1,58 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import StatsCard from '../../components/StatsCard/StatsCard';
-import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor } from 'lucide-react';
-import api from '../../utils/api';
+import axios from 'axios';
 
-function Dashboard() {
-    const [counts, setCounts] = useState({});
+const BASE_URL = 'http://localhost:5000/api'; // Adjust the port if needed
 
-    useEffect(() => {
-        const fetchCounts = async () => {
-            try {
-                const response = await api.getCounts();
-                console.log('API Response:', response); // Log the response to debug
+const api = {
+    // Asset Routes
+    getAssets: () => axios.get(`${BASE_URL}/assets`),
+    getAssetById: (id) => axios.get(`${BASE_URL}/assets/${id}`),
+    createAsset: (data) => axios.post(`${BASE_URL}/assets`, data),
+    updateAssetById: (id, data) => axios.put(`${BASE_URL}/assets/${id}`, data),
+    deleteAssetById: (id) => axios.delete(`${BASE_URL}/assets/${id}`),
 
-                if (response && response.data.counts) {
-                    setCounts(response.data.counts);
-                } else {
-                    console.error('Invalid response data:', response);
-                }
-            } catch (error) {
-                console.error('Error fetching counts:', error);
-            }
-        };
+    // Software Routes
+    getSoftwareAssets: () => axios.get(`${BASE_URL}/software`),
+    getSoftwareById: (id) => axios.get(`${BASE_URL}/software/${id}`),
+    createSoftware: (data) => axios.post(`${BASE_URL}/software`, data),
+    updateSoftwareById: (id, data) => axios.put(`${BASE_URL}/software/${id}`, data),
+    deleteSoftwareById: (id) => axios.delete(`${BASE_URL}/software/${id}`),
 
-        fetchCounts();
-    }, []);
+    // User Routes
+    getUsers: () => axios.get(`${BASE_URL}/users`),
+    getUserById: (id) => axios.get(`${BASE_URL}/users/${id}`),
+    createUser: (data) => axios.post(`${BASE_URL}/users`, data),
+    updateUserById: (id, data) => axios.put(`${BASE_URL}/users/${id}`, data),
+    deleteUserById: (id) => axios.delete(`${BASE_URL}/users/${id}`),
 
+    // Notification Routes
+    getNotifications: () => axios.get(`${BASE_URL}/notifications`),
+    createNotification: (data) => axios.post(`${BASE_URL}/notifications`, data),
+    deleteNotificationById: (id) => axios.delete(`${BASE_URL}/notifications/${id}`),
 
-    const stats = [
-        { title: 'Total Assets', value: counts.assetmanage ?? '0', icon: Package },
-        { title: 'Expiring Licenses', value: counts.expiring ?? '0', icon: AlertTriangle },
-        { title: 'In Stock', value: counts.stock ?? '0', icon: Boxes },
-        { title: 'Hardware Assets', value: counts.in_out ?? '0', icon: Monitor },
-        { title: 'Assigned', value: counts.inuse ?? '0', icon: HardDrive },
-        { title: 'Maintenance', value: counts.maintenance_manage ?? '0', icon: Wrench },
-        { title: 'Disposed', value: counts.disposal ?? '0', icon: Trash2 },
-        { title: 'Software Assets', value: counts.softwareassets ?? '0', icon: FileCode },
-    ];
+    // Maintenance Routes
+    getMaintenanceRecords: () => axios.get(`${BASE_URL}/maintenance`),
+    createMaintenanceRecord: (data) => axios.post(`${BASE_URL}/maintenance`, data),
+    updateMaintenanceRecordById: (id, data) => axios.put(`${BASE_URL}/maintenance/${id}`, data),
+    deleteMaintenanceRecordById: (id) => axios.delete(`${BASE_URL}/maintenance/${id}`),
 
-    return (
-        <div className="p-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    Notifications
-                </button>
-            </div>
+    // Count Routes
+    getCounts: () => axios.get(`${BASE_URL}/count`),
+    getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`)
+};
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, index) => (
-                    <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
-                ))}
-            </div>
-        </div>
-    );
-}
-
-export default Dashboard;
+// Ensure proper export
+export default api;
