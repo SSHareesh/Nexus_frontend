@@ -33,7 +33,7 @@ export const fetchCounts = async () => {
 // ✅ Fetch all hardware assets for HardwareAssets.jsx
 export const fetchAssets = async () => {
   try {
-    const response = await api.get("/assets/");
+    const response = await api.get("/assets");
     return response.data || []; // Ensure an array is returned
   } catch (error) {
     console.error("Error fetching assets:", error);

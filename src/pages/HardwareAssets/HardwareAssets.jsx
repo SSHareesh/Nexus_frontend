@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
+import { fetchAssets } from "../../utils/api";
 
 
 function HardwareAssets() {
@@ -9,27 +10,19 @@ function HardwareAssets() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/assets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch assets");
-        }
-        const responseData = await response.json();
-        console.log("Fetched Data:", responseData); // Debugging log
-  
-        // Ensure the data field exists and is an array
-        if (Array.isArray(responseData.data)) {
-          setAssets(responseData.data);
-        } else {
-          console.error("Fetched data is not an array", responseData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    const getAssets = async () => {
+      const response = await fetchAssets();
+      console.log("Fetched data:", response);  // Log the data
+      
+      // Check if the response has a 'data' property and it's an array
+      if (response && Array.isArray(response.data)) {
+        setAssets(response.data);  // Set the 'data' array to the state
+      } else {
+        console.error("Fetched data is not an array:", response);
+        setAssets([]);  // Set to an empty array to prevent errors
       }
     };
-  
-    fetchData();
+    getAssets();
   }, []);
   
 
