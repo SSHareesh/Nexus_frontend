@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";  // Import useNavigate
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
 import { fetchAssets } from "../../utils/api";
 
-
 function HardwareAssets() {
+  const navigate = useNavigate();  // Declare navigate hook
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -14,17 +15,20 @@ function HardwareAssets() {
       const response = await fetchAssets();
       console.log("Fetched data:", response);  // Log the data
       
-      // Check if the response has a 'data' property and it's an array
       if (response && Array.isArray(response.data)) {
-        setAssets(response.data);  // Set the 'data' array to the state
+        setAssets(response.data);
       } else {
         console.error("Fetched data is not an array:", response);
-        setAssets([]);  // Set to an empty array to prevent errors
+        setAssets([]);
       }
     };
     getAssets();
   }, []);
-  
+
+  const handleViewMore = (asset) => {
+    // Navigate to the EditHardware page with asset id as a parameter
+    navigate(`/EditHardware/${asset.assetid}`);
+  };
 
   const filterOptions = [
     "All",
@@ -35,7 +39,7 @@ function HardwareAssets() {
   ];
 
   const filteredAssets = assets.filter((asset) => {
-    const normalizedStatus = asset.status.trim().toLowerCase(); // Normalize status
+    const normalizedStatus = asset.status.trim().toLowerCase();
     const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter =
       selectedFilter === "All" ||
@@ -43,12 +47,10 @@ function HardwareAssets() {
       (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
       (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
       (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
-      (selectedFilter === "Disposed" && normalizedStatus === "disposed") 
-  
+      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+
     return matchesSearch && matchesFilter;
   });
-  
-  
 
   const formatDate = (isoString) => {
     if (!isoString) return "N/A";
@@ -132,15 +134,15 @@ function HardwareAssets() {
                   <td className="px-6 py-4 border-b">
                     <span
                       className={`px-2 py-1 text-xs rounded ${
-                          asset.status === "In Stock"
+                        asset.status === "In Stock"
                           ? "bg-green-200 text-green-800"
                           : asset.status === "Assigned"
                           ? "bg-yellow-200 text-yellow-800"
                           : asset.status === "Maintenance"
                           ? "bg-orange-200 text-orange-800"
                           : asset.status === "Disposed" || "disposed"
-                          ?"bg-red-200 text-red-800"
-                          :"bg-blue-200 text-blue-800"
+                          ? "bg-red-200 text-red-800"
+                          : "bg-blue-200 text-blue-800"
                       }`}>
                       {asset.status}
                     </span>
@@ -150,16 +152,15 @@ function HardwareAssets() {
                     {asset.assigneduserid ? asset.assigneduserid : " "}
                   </td>
                   <td className="px-6 py-4 border-b">{formatDate(asset.lastcheckoutdate)}</td>
-               {/* Actions Column */}
-            <td className="px-6 py-4 border-b flex space-x-2">
-              {/* View More Button */}
-              <button
-                className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
-                title="View More"
-                onClick={() => handleViewMore(asset)}
-              >
-                <Eye size={18} />
-              </button>
+                  <td className="px-6 py-4 border-b flex space-x-2">
+                    {/* View More Button */}
+                    <button
+                      className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
+                      title="View More"
+                      onClick={() => handleViewMore(asset)}
+                    >
+                      <Eye size={18} />
+                    </button>
 
               {/* Delete Button */}
               <button
