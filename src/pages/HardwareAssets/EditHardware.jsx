@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchAssetById, updateAsset } from "../../utils/api";  // Import update function
+import api from "../../utils/api";  // Import update function
 import { Save, Trash2, X, Edit } from "lucide-react";   // For Save/Cancel buttons
 
 const EditHardware = () => {
@@ -10,11 +10,11 @@ const EditHardware = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const getAsset = async () => {
-      const data = await fetchAssetById(id);
-      setAsset(data );  // Set asset data
+    const fetchAssetById = async () => {
+      const data = await api.getAssetById(id);
+      setAsset(data.data);  // Set asset data
     };
-    getAsset();
+    fetchAssetById();
   }, [id]);
 
   const handleChange = (e) => {
@@ -27,7 +27,7 @@ const EditHardware = () => {
   const handleSave = async () => {
     try {
       // Update the asset using the updateAsset function
-      const updatedAsset = await updateAsset(id, asset);
+      const updatedAsset = await api.updateAssetById(id, asset);
       console.log("Updated asset", updatedAsset);
       navigate("/HardwareAssets");  // After saving, navigate back to the assets list
     } catch (error) {

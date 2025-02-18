@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
-import EditHardware from './pages/EditHardware/EditHardware';
+import EditHardware from './pages/HardwareAssets/EditHardware';
 function App() {
   return (
     <Router>
