@@ -7,7 +7,7 @@ import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 
 // import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SotwareAssets';
-import EditHardware from './pages/EditHardware/EditHardware';
+import EditHardware from './pages/HardwareAssets/EditHardware';
  // <-- Add this import
 
 function App() {

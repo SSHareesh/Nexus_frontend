@@ -106,7 +106,7 @@ function HardwareAssets() {
 
           {/* Add New Button */}
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            <Plus className="inline-block mr-2" size={18} />
+            <Plus className="inline-block mr-2" size={18} onClick={() => navigate("/AddHardwareAsset")} />
             Add New
           </button>
         </div>
