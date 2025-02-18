@@ -10,19 +10,27 @@ function HardwareAssets() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://api.example.com/hardware-assets");
+        const response = await fetch("http://localhost:5000/api/assets");
         if (!response.ok) {
           throw new Error("Failed to fetch assets");
         }
-        const data = await response.json();
-        setAssets(data);
+        const responseData = await response.json();
+        console.log("Fetched Data:", responseData); // Debugging log
+  
+        // Ensure the data field exists and is an array
+        if (Array.isArray(responseData.data)) {
+          setAssets(responseData.data);
+        } else {
+          console.error("Fetched data is not an array", responseData);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const filterOptions = [
     "All",
@@ -30,15 +38,33 @@ function HardwareAssets() {
     "Assigned",
     "Under Maintenance",
     "Disposed",
-    "Expiring Soon",
   ];
 
   const filteredAssets = assets.filter((asset) => {
-    return (
-      asset.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedFilter === "All" || selectedFilter === "" || asset.status === selectedFilter)
-    );
+    const normalizedStatus = asset.status.trim().toLowerCase(); // Normalize status
+    const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      selectedFilter === "All" ||
+      selectedFilter === "" ||
+      (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
+      (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
+      (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
+      (selectedFilter === "Disposed" && normalizedStatus === "disposed") 
+  
+    return matchesSearch && matchesFilter;
   });
+  
+  
+
+  const formatDate = (isoString) => {
+    if (!isoString) return "N/A";
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="p-6">
@@ -59,7 +85,7 @@ function HardwareAssets() {
           <div className="relative">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="px-4 py-2 flex items-center bg-gray-200 rounded-lg hover:bg-gray-300 transition" >
+              className="px-4 py-2 flex items-center bg-gray-200 rounded-lg hover:bg-gray-300 transition">
               <Filter className="mr-2" size={18} />
               Filters
             </button>
@@ -74,7 +100,7 @@ function HardwareAssets() {
                     onClick={() => {
                       setSelectedFilter(filter);
                       setShowFilters(false);
-                    }} >
+                    }}>
                     {filter}
                   </button>
                 ))}
@@ -94,41 +120,47 @@ function HardwareAssets() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-6 py-3 border-b">Asset Name</th>
+              <th className="px-6 py-3 border-b">Asset ID</th>
               <th className="px-6 py-3 border-b">Category</th>
               <th className="px-6 py-3 border-b">Status</th>
-              <th className="px-6 py-3 border-b">Location</th>
-              <th className="px-6 py-3 border-b">Last Updated</th>
+              <th className="px-6 py-3 border-b">OS</th>
+              <th className="px-6 py-3 border-b">Assigned User</th>
+              <th className="px-6 py-3 border-b">Last CheckOut</th>
+              <th className="px-6 py-3 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredAssets.length > 0 ? (
               filteredAssets.map((asset, index) => (
                 <tr key={index} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 border-b">{asset.name}</td>
-                  <td className="px-6 py-4 border-b">{asset.category}</td>
+                  <td className="px-6 py-4 border-b">{asset.assetid}</td>
+                  <td className="px-6 py-4 border-b">{asset.assettype}</td>
                   <td className="px-6 py-4 border-b">
                     <span
                       className={`px-2 py-1 text-xs rounded ${
-                        asset.status === "In Stock"
+                          asset.status === "In Stock"
                           ? "bg-green-200 text-green-800"
                           : asset.status === "Assigned"
                           ? "bg-yellow-200 text-yellow-800"
-                          : asset.status === "Under Maintenance"
+                          : asset.status === "Maintenance"
                           ? "bg-orange-200 text-orange-800"
-                          : "bg-red-200 text-red-800"
-                      }`}
-                    >
+                          : asset.status === "Disposed" || "disposed"
+                          ?"bg-red-200 text-red-800"
+                          :"bg-blue-200 text-blue-800"
+                      }`}>
                       {asset.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 border-b">{asset.location}</td>
-                  <td className="px-6 py-4 border-b">{asset.lastUpdated}</td>
+                  <td className="px-6 py-4 border-b">{asset.operatingsystem}</td>
+                  <td className="px-6 py-4 border-b">
+                    {asset.assigneduserid ? asset.assigneduserid : " "}
+                  </td>
+                  <td className="px-6 py-4 border-b">{formatDate(asset.lastcheckoutdate)}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
                   No assets found.
                 </td>
               </tr>
