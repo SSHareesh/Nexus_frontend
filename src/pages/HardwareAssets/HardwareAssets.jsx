@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";  // Import useNavigate
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
-import { fetchAssets } from "../../utils/api";
+import api from "../../utils/api";
 
 function HardwareAssets() {
   const navigate = useNavigate();  // Declare navigate hook
@@ -11,18 +11,18 @@ function HardwareAssets() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const getAssets = async () => {
-      const response = await fetchAssets();
-      console.log("Fetched data:", response);  // Log the data
-      
-      if (response && Array.isArray(response.data)) {
-        setAssets(response.data);
+    const fetchAssets = async () => {
+      const response = await api.getAssets();
+      console.log("Fetched data:", response.data.data);  // Log the data
+
+      if (response && Array.isArray(response.data.data)) {
+        setAssets(response.data.data);
       } else {
-        console.error("Fetched data is not an array:", response);
+        console.error("Fetched data is not an array:", response.data.data);
         setAssets([]);
       }
     };
-    getAssets();
+    fetchAssets();
   }, []);
 
   const handleViewMore = (asset) => {
@@ -90,9 +90,8 @@ function HardwareAssets() {
                 {filterOptions.map((filter, index) => (
                   <button
                     key={index}
-                    className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-200 ${
-                      selectedFilter === filter ? "font-bold" : ""
-                    }`}
+                    className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-200 ${selectedFilter === filter ? "font-bold" : ""
+                      }`}
                     onClick={() => {
                       setSelectedFilter(filter);
                       setShowFilters(false);
@@ -133,17 +132,16 @@ function HardwareAssets() {
                   <td className="px-6 py-4 border-b">{asset.assettype}</td>
                   <td className="px-6 py-4 border-b">
                     <span
-                      className={`px-2 py-1 text-xs rounded ${
-                        asset.status === "In Stock"
-                          ? "bg-green-200 text-green-800"
-                          : asset.status === "Assigned"
+                      className={`px-2 py-1 text-xs rounded ${asset.status === "In Stock"
+                        ? "bg-green-200 text-green-800"
+                        : asset.status === "Assigned"
                           ? "bg-yellow-200 text-yellow-800"
                           : asset.status === "Maintenance"
-                          ? "bg-orange-200 text-orange-800"
-                          : asset.status === "Disposed" || "disposed"
-                          ? "bg-red-200 text-red-800"
-                          : "bg-blue-200 text-blue-800"
-                      }`}>
+                            ? "bg-orange-200 text-orange-800"
+                            : asset.status === "Disposed" || "disposed"
+                              ? "bg-red-200 text-red-800"
+                              : "bg-blue-200 text-blue-800"
+                        }`}>
                       {asset.status}
                     </span>
                   </td>
@@ -162,43 +160,42 @@ function HardwareAssets() {
                       <Eye size={18} />
                     </button>
 
-              {/* Delete Button */}
-              <button
-                className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                title="Delete"
-                onClick={() => handleDelete(asset.assetid)}
-              >
-                <Trash2 size={18} />
-              </button>
+                    {/* Delete Button */}
+                    <button
+                      className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                      title="Delete"
+                      onClick={() => handleDelete(asset.assetid)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
 
-              {/* Dispose Button */}
-              <button
-                className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
-                title="Dispose"
-                onClick={() => handleDispose(asset.assetid)}
-              >
-                <Archive size={18} />
-              </button>
+                    {/* Dispose Button */}
+                    <button
+                      className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      title="Dispose"
+                      onClick={() => handleDispose(asset.assetid)}
+                    >
+                      <Archive size={18} />
+                    </button>
 
-              {/* Check-in / Check-out Button */}
-              <button
-                className={`p-2 rounded ${
-                  asset.lastcheckoutdate
-                    ? "bg-green-100 text-green-600 hover:bg-green-200"
-                    : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
-                }`}
-                title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
-                onClick={() => handleCheckInOut(asset)}
-              >
-                {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
-              </button>
-            </td>
-          </tr>
-        ))
-      ) : (
-        <tr>
-          <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
-            No assets found.
+                    {/* Check-in / Check-out Button */}
+                    <button
+                      className={`p-2 rounded ${asset.lastcheckoutdate
+                        ? "bg-green-100 text-green-600 hover:bg-green-200"
+                        : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                        }`}
+                      title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
+                      onClick={() => handleCheckInOut(asset)}
+                    >
+                      {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                  No assets found.
                 </td>
               </tr>
             )}
