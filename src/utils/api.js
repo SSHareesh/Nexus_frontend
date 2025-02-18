@@ -52,4 +52,14 @@ export const fetchAssetById = async (id) => {
   }
 };
 
+export const updateAsset = async (id, updatedData) => {
+  try {
+    const response = await api.put(`/assets/${id}`, updatedData);
+    return response.data; // Return updated asset data
+  } catch (error) {
+    console.error(`Error updating asset with ID ${id}:`, error);
+    throw new Error("Failed to update asset.");
+  }
+};
+
 export default api;

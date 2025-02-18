@@ -2,11 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard/Dashboard';
-// import NavBar from './components/layout/Navbar';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
-
+import EditHardware from './pages/EditHardware/EditHardware';
 function App() {
   return (
     <Router>
@@ -15,6 +14,7 @@ function App() {
         <Route path='/HardwareAssets' element={<Layout><HardwareAssets /></Layout>} />
         <Route path='/SoftwareAssets' element={<Layout><SoftwareAssets /></Layout>} />
         <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset/></Layout>} />
+        <Route path='/EditHardware' element={<Layout><EditHardware/></Layout>} />
       </Routes>
     </Router>
   );

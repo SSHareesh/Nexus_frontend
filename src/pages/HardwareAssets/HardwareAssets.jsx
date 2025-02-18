@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function HardwareAssets() {
   const navigate = useNavigate();
+  
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -18,15 +19,22 @@ function HardwareAssets() {
       
       if (response && Array.isArray(response.data)) {
         setAssets(response.data); 
+        setAssets(response.data);
       } else {
         console.error("Fetched data is not an array:", response);
         setAssets([]);  
+        setAssets([]);
       }
     };
     getAssets();
   }, []);
   
   
+
+  const handleViewMore = (asset) => {
+    navigate(`/EditHardware/${asset.assetid}`);
+  };
+
   const filterOptions = [
     "All",
     "In Stock",
@@ -36,7 +44,7 @@ function HardwareAssets() {
   ];
 
   const filteredAssets = assets.filter((asset) => {
-    const normalizedStatus = asset.status.trim().toLowerCase(); // Normalize status
+    const normalizedStatus = asset.status.trim().toLowerCase();
     const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter =
       selectedFilter === "All" ||
@@ -44,12 +52,10 @@ function HardwareAssets() {
       (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
       (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
       (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
-      (selectedFilter === "Disposed" && normalizedStatus === "disposed") 
-  
+      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+
     return matchesSearch && matchesFilter;
   });
-  
-  
 
   const formatDate = (isoString) => {
     if (!isoString) return "N/A";
@@ -133,15 +139,15 @@ function HardwareAssets() {
                   <td className="px-6 py-4 border-b">
                     <span
                       className={`px-2 py-1 text-xs rounded ${
-                          asset.status === "In Stock"
+                        asset.status === "In Stock"
                           ? "bg-green-200 text-green-800"
                           : asset.status === "Assigned"
                           ? "bg-yellow-200 text-yellow-800"
                           : asset.status === "Maintenance"
                           ? "bg-orange-200 text-orange-800"
                           : asset.status === "Disposed" || "disposed"
-                          ?"bg-red-200 text-red-800"
-                          :"bg-blue-200 text-blue-800"
+                          ? "bg-red-200 text-red-800"
+                          : "bg-blue-200 text-blue-800"
                       }`}>
                       {asset.status}
                     </span>
@@ -160,7 +166,7 @@ function HardwareAssets() {
                 onClick={() => handleViewMore(asset)}>
                 <Eye size={18} />
               </button>
-
+                  
               {/* Delete Button */}
               <button
                 className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
@@ -190,6 +196,7 @@ function HardwareAssets() {
                 {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
               </button>
             </td>
+            
           </tr>
         ))
       ) : (
