@@ -1,31 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import StatsCard from '../../components/StatsCard/StatsCard';
 import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor } from 'lucide-react';
-import { fetchCounts } from '../../utils/api';
+import api from '../../utils/api';
 
 function Dashboard() {
   const [counts, setCounts] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      const data = await fetchCounts();
-      if (data) {
-        setCounts(data);
+    const fetchCounts = async () => {
+      try {
+        const response = await api.getCounts();
+        console.log('API Response:', response); // Log the response to debug
+
+        if (response && response.data.counts) {
+          setCounts(response.data.counts);
+        } else {
+          console.error('Invalid response data:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching counts:', error);
       }
     };
 
-    getData();
+    fetchCounts();
   }, []);
 
+
   const stats = [
-    { title: 'Total Assets', value: counts.assetmanage || '0', icon: Package },
-    { title: 'Expiring Licenses', value: counts.expiring || '0', icon: AlertTriangle },
-    { title: 'In Stock', value: counts.stock || '0', icon: Boxes },
-    { title: 'Hardware Assets', value: counts.in_out || '0', icon: Monitor },
-    { title: 'Assigned', value: counts.inuse || '0', icon: HardDrive },
-    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench },
-    { title: 'Disposed', value: counts.disposal || '0', icon: Trash2 },
-    { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode },
+    { title: 'Total Assets', value: counts.assetmanage ?? '0', icon: Package },
+    { title: 'Expiring Licenses', value: counts.expiring ?? '0', icon: AlertTriangle },
+    { title: 'In Stock', value: counts.stock ?? '0', icon: Boxes },
+    { title: 'Hardware Assets', value: counts.in_out ?? '0', icon: Monitor },
+    { title: 'Assigned', value: counts.inuse ?? '0', icon: HardDrive },
+    { title: 'Maintenance', value: counts.maintenance_manage ?? '0', icon: Wrench },
+    { title: 'Disposed', value: counts.disposal ?? '0', icon: Trash2 },
+    { title: 'Software Assets', value: counts.softwareassets ?? '0', icon: FileCode },
   ];
 
   return (
