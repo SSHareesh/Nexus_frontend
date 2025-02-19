@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
 import api from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 function HardwareAssets() {
-  const navigate = useNavigate();  // Declare navigate hook
+  const navigate = useNavigate();
+  
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -24,9 +25,10 @@ function HardwareAssets() {
     };
     fetchAssets();
   }, []);
+  
+  
 
   const handleViewMore = (asset) => {
-    // Navigate to the EditHardware page with asset id as a parameter
     navigate(`/EditHardware/${asset.assetid}`);
   };
 
@@ -104,8 +106,8 @@ function HardwareAssets() {
           </div>
 
           {/* Add New Button */}
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            <Plus className="inline-block mr-2" size={18} />
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/AddHardwareAsset")}>
+            <Plus className="inline-block mr-2" size={18}  />
             Add New
           </button>
         </div>

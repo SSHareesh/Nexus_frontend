@@ -94,6 +94,7 @@ const SoftwareAssets = () => {
           </button>
         </div>
       </div>
+<<<<<<< HEAD:src/pages/SoftwareAssets/SotwareAssets.jsx
 
       {/* Success Message */}
       {message && (
@@ -105,6 +106,11 @@ const SoftwareAssets = () => {
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <table className="w-full border-collapse text-base">
           <thead className="bg-gray-200 text-gray-700">
+=======
+      <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-gray-200 text-gray-700 text-sm ">
+>>>>>>> 10fbe71dcf19a935acb6bcde2bf3e3612d3ed779:src/pages/SoftwareAssets/SoftwareAssets.jsx
             <tr>
               {Object.keys(columnMappings).map((col) => (
                 <th key={col} className="p-3 text-center cursor-pointer" onClick={() => handleSort(col)}>
@@ -138,6 +144,7 @@ const SoftwareAssets = () => {
                     <Eye size={18} />
                   </button>
 
+<<<<<<< HEAD:src/pages/SoftwareAssets/SotwareAssets.jsx
                   <button
                     className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
                     title="Delete"
@@ -148,6 +155,42 @@ const SoftwareAssets = () => {
                 </td>
               </tr>
             ))}
+=======
+              return (
+                <tr key={asset.id} className="border-b hover:bg-gray-100 transition text-sm ">
+                  <td className="p-2">{asset.softwarename}</td>
+                  <td className="p-2">{asset.softwareversion}</td>
+                  <td className="p-2">{asset.assetid}</td>
+                  <td className="p-2">{asset.assigneduserid}</td>
+                  <td className={`p-2 ${dateColor}`}>{asset.licenseexpirydate}</td>
+                  <td className="p-2">{asset.project}</td>
+                  <td className="px-4 py-2 border-b flex space-x-2">
+                    <button
+                      className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
+                      title="View More"
+                      onClick={() => handleViewMore(asset)}
+                    >
+                      <Eye size={16} />
+                    </button>
+                    <button
+                      className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      title="Dispose"
+                      onClick={() => handleDispose(asset.assetid)}
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                      title="Delete"
+                      onClick={() => handleDelete(asset.assetid)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+>>>>>>> 10fbe71dcf19a935acb6bcde2bf3e3612d3ed779:src/pages/SoftwareAssets/SoftwareAssets.jsx
           </tbody>
         </table>
 
