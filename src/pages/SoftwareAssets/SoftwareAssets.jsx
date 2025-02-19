@@ -65,9 +65,9 @@ const SoftwareAssets = () => {
           </button>
         </div>
       </div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <table className="w-full border-collapse text-sm">
-          <thead className="bg-gray-200 text-gray-700 text-xs">
+      <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-gray-200 text-gray-700 text-sm ">
             <tr>
               {["softwarename", "softwareversion", "assetid", "assigneduserid", "licenseexpirydate", "project", "actions"].map((col) => (
                 <th key={col} className="p-2 text-left cursor-pointer" onClick={() => handleSort(col)}>
@@ -87,7 +87,7 @@ const SoftwareAssets = () => {
               else if (expiryDate < oneMonthFromNow) dateColor = "text-yellow-600";
 
               return (
-                <tr key={asset.id} className="border-b hover:bg-gray-100 transition text-xs">
+                <tr key={asset.id} className="border-b hover:bg-gray-100 transition text-sm ">
                   <td className="p-2">{asset.softwarename}</td>
                   <td className="p-2">{asset.softwareversion}</td>
                   <td className="p-2">{asset.assetid}</td>
