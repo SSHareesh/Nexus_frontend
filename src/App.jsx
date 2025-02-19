@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 //import SoftwareAssets from "@/pages/SoftwareAssets/SoftwareAssets.jsx";
 import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
-import SoftwareAssets from './pages/SoftwareAssets/SotwareAssets';
+import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import EditHardware from './pages/EditHardware/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
 
