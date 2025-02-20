@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Dashboard from './pages/Dashboard/Dashboard';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
+import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
 //import SoftwareAssets from "@/pages/SoftwareAssets/SoftwareAssets.jsx";
 
 // import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
@@ -18,6 +19,7 @@ function App() {
         <Route path='/HardwareAssets' element={<Layout><HardwareAssets /></Layout>} />
         <Route path='/SoftwareAssets' element={<Layout><SoftwareAssets /></Layout>} />
         <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} /> 
+        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} /> 
       </Routes>
     </Router>
   );
