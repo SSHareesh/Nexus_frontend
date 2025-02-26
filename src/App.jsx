@@ -10,7 +10,7 @@ import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import EditHardware from './pages/EditHardware/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
-import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset'
+
 function App() {
   return (
     <Router>
@@ -19,12 +19,11 @@ function App() {
         <Route path="/Signup" element={<Signup />} />
         <Route path="/Dashboard" element={<Layout><Dashboard /></Layout>} />
         <Route path='/HardwareAssets' element={<Layout><HardwareAssets /></Layout>} />
-        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset/></Layout>} />
+        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} />
         <Route path='/SoftwareAssets' element={<Layout><SoftwareAssets /></Layout>} />
         <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} />
         <Route path="/EditSoftwareAssets/:id" element={<Layout><EditSoftwareAssets /></Layout>} />
         <Route path='/AddSoftware' element={<Layout><AddSoftware /></Layout>} />
-        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} />
       </Routes>
     </Router>
   );
