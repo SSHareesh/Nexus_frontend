@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Search, Plus, Eye, Trash2, ChevronUp, ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../utils/api";
+import { format, isPast, differenceInDays } from "date-fns";
 
 const columnMappings = {
   softwarename: "Software Name",
@@ -10,7 +11,7 @@ const columnMappings = {
   assigneduserid: "Assigned User",
   licenseexpirydate: "Expiry Date",
   project: "Project",
-  actions: "Actions"
+  actions: "Actions",
 };
 
 const SoftwareAssets = () => {
@@ -18,23 +19,36 @@ const SoftwareAssets = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState("licenseexpirydate");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [message, setMessage] = useState(""); // State for success message
+  const [message, setMessage] = useState("");
+  const [showExpiringOnly, setShowExpiringOnly] = useState(false);
+  const [selectedSoftware, setSelectedSoftware] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchSoftwareAssets = async () => {
       try {
         const response = await api.getSoftwareAssets();
-        const sortedData = response.data.data.sort((a, b) =>
+        let sortedData = response.data.data.sort((a, b) =>
           new Date(a.licenseexpirydate) - new Date(b.licenseexpirydate)
         );
+
+        const queryParams = new URLSearchParams(location.search);
+        if (queryParams.get("filter") === "expiring") {
+          sortedData = sortedData.filter(asset =>
+            differenceInDays(new Date(asset.licenseexpirydate), new Date()) <= 30
+          );
+          setShowExpiringOnly(true);
+        }
+
         setSoftwareAssets(sortedData);
       } catch (error) {
         console.error("Error fetching software assets:", error);
       }
     };
+
     fetchSoftwareAssets();
-  }, []);
+  }, [location.search]);
 
   const handleSort = (column) => {
     if (sortColumn === column) {
@@ -53,38 +67,63 @@ const SoftwareAssets = () => {
     navigate(`/AddSoftware`);
   };
 
-  const handleDelete = async (softwareId) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this software asset?");
-    if (!isConfirmed) return;
+  const handleDelete = async () => {
+    if (!selectedSoftware) return;
 
     try {
-      const response = await api.deleteSoftwareById(softwareId);
-      setSoftwareAssets(softwareAssets.filter((asset) => asset.softwareid !== softwareId)); // Remove deleted asset
-      setMessage(response.data.message); // Show success message
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      await api.deleteSoftwareById(selectedSoftware.softwareid);
+      setSoftwareAssets(softwareAssets.filter(asset => asset.softwareid !== selectedSoftware.softwareid));
+      setMessage(`${selectedSoftware.softwarename} deleted successfully.`);
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting software asset:", error);
     }
+    setSelectedSoftware(null);
   };
 
-  const sortedAssets = [...softwareAssets].sort((a, b) =>
-    sortOrder === "asc" ? (a[sortColumn] > b[sortColumn] ? 1 : -1) : (a[sortColumn] < b[sortColumn] ? 1 : -1)
+  const filteredAssets = softwareAssets.filter(asset =>
+    Object.values(asset).some(value =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
+  const sortedAssets = [...filteredAssets].sort((a, b) => {
+    if (sortColumn === "licenseexpirydate") {
+      return sortOrder === "asc"
+        ? new Date(a.licenseexpirydate) - new Date(b.licenseexpirydate)
+        : new Date(b.licenseexpirydate) - new Date(a.licenseexpirydate);
+    }
+    return sortOrder === "asc"
+      ? a[sortColumn].localeCompare(b[sortColumn])
+      : b[sortColumn].localeCompare(a[sortColumn]);
+  });
+
+  const getExpiryDateDisplay = (date) => {
+    const expiryDate = new Date(date);
+    const formattedDate = format(expiryDate, "MMMM dd, yyyy");
+
+    if (isPast(expiryDate)) {
+      return <span className="text-red-500">{formattedDate} (Expired)</span>;
+    } else if (differenceInDays(expiryDate, new Date()) <= 30) {
+      return <span className="text-yellow-500">{formattedDate} (Expiring Soon)</span>;
+    } else {
+      return formattedDate;
+    }
+  };
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Software Assets</h1>
-        <div className="flex space-x-4">
-          <div className="relative">
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-xl md:text-xl font-bold text-gray-800">Software Assets</h1>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <div className="relative w-full md:w-auto">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base w-full"
             />
           </div>
           <button
@@ -96,15 +135,14 @@ const SoftwareAssets = () => {
         </div>
       </div>
 
-      {/* Success Message */}
       {message && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
           {message}
         </div>
       )}
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <table className="w-full border-collapse text-base">
+      <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+        <table className="min-w-full border-collapse text-base">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {Object.keys(columnMappings).map((col) => (
@@ -128,22 +166,13 @@ const SoftwareAssets = () => {
                 <td className="p-3 text-center">{software.softwareversion}</td>
                 <td className="p-3 text-center">{software.assetid}</td>
                 <td className="p-3 text-center">{software.assigneduserid}</td>
-                <td className="p-3 text-center">{software.licenseexpirydate}</td>
+                <td className="p-3 text-center">{getExpiryDateDisplay(software.licenseexpirydate)}</td>
                 <td className="p-3 text-center">{software.project}</td>
                 <td className="px-4 py-2 border-b flex justify-center space-x-2">
-                  <button
-                    className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
-                    title="View More"
-                    onClick={() => handleViewMore(software)}
-                  >
+                  <button className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200" onClick={() => handleViewMore(software)}>
                     <Eye size={18} />
                   </button>
-
-                  <button
-                    className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                    title="Delete"
-                    onClick={() => handleDelete(software.softwareid)}
-                  >
+                  <button className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200" onClick={() => setSelectedSoftware(software)}>
                     <Trash2 size={18} />
                   </button>
                 </td>
@@ -151,13 +180,17 @@ const SoftwareAssets = () => {
             ))}
           </tbody>
         </table>
-
-        {sortedAssets.length === 0 && (
-          <div className="text-center p-4 text-gray-500 text-base">
-            No matching software assets found.
-          </div>
-        )}
       </div>
+
+      {selectedSoftware && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p className="pb-6">Are you sure you want to delete <strong>{selectedSoftware.softwarename}</strong>?</p>
+            <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded mr-2">Delete</button>
+            <button onClick={() => setSelectedSoftware(null)} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

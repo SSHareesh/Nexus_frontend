@@ -22,8 +22,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         {!isCollapsed && <h1 className="text-xl font-bold text-gray-700">NEXUS</h1>}
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
           {isCollapsed ? <Menu size={20} /> : <Menu size={20} />}
         </button>
       </div>

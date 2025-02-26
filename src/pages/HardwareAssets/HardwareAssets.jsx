@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Filter, Search, Eye, Trash2, Recycle, CheckSquare, Square, X } from "lucide-react";
-import api from "../../utils/api";
+import { useLocation } from "react-router-dom";
+import api from "../../utils/api"; // Ensure correct path
+import { Search, Filter, Plus, Eye, CheckSquare, Square, Recycle, Trash2, X } from "lucide-react";
 
 
 function HardwareAssets() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialFilter = queryParams.get("filter") || "";
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [showDisposeModal, setShowDisposeModal] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [showDisposeModal, setShowDisposeModal] = useState(false);
   const [disposalDetails, setDisposalDetails] = useState({
     repairedOn: "",
     disposalDate: "",
     reason: "",
+    comments: "",
   });
 
   useEffect(() => {
+
+
     const fetchAssets = async () => {
       try {
         const response = await api.getAssets();
@@ -37,8 +44,10 @@ function HardwareAssets() {
     };
     fetchAssets();
   }, []);
-  
-  
+
+  useEffect(() => {
+    setSelectedFilter(initialFilter);
+  }, [initialFilter]);
 
   const handleViewMore = (asset) => {
     navigate(`/EditHardware/${asset.assetid}`);
@@ -99,10 +108,10 @@ function HardwareAssets() {
     const matchesFilter =
       selectedFilter === "All" ||
       selectedFilter === "" ||
-      (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
-      (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
-      (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
-      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+      (selectedFilter.toLowerCase() === "in stock" && normalizedStatus === "instock") ||
+      (selectedFilter.toLowerCase() === "assigned" && normalizedStatus === "assigned") ||
+      (selectedFilter.toLowerCase() === "under maintenance" && normalizedStatus === "maintenance") ||
+      (selectedFilter.toLowerCase() === "disposed" && normalizedStatus === "disposed");
 
     return matchesSearch && matchesFilter;
   });
@@ -120,7 +129,7 @@ function HardwareAssets() {
   return (
     <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-        <h1 className="text-2xl font-bold text-gray-800">Hardware Assets</h1>
+        <h1 className="text-xl font-bold text-gray-800">Hardware Assets</h1>
         <div className="flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -160,21 +169,20 @@ function HardwareAssets() {
                 ))}
               </div>
             )}
+
           </div>
 
           {/* Add New Button */}
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            onClick={() => navigate("/AddHardwareAsset")}
-          >
-            <Plus className="inline-block mr-2" size={18} />
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/AddHardwareAsset")}>
+            <Plus className="inline-block mr-2" size={18}  />
             Add New
           </button>
         </div>
       </div>
 
+
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse text-base">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 border-b">Asset ID</th>

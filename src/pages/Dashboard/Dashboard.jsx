@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StatsCard from '../../components/StatsCard/StatsCard';
-import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor,CheckSquare, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor, CheckSquare, Plus } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../utils/api';
 
 function Dashboard() {
@@ -50,16 +50,16 @@ function Dashboard() {
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-around mb-8">
         <button
-          onClick={() => navigate('/AddHardwareAsset')}
+          onClick={() => navigate("/AddHardwareAsset")}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg mb-2 hover:bg-blue-700 transition">
-        <Plus className="inline-block  mr-2 " size={18}/>
+          <Plus className="inline-block  mr-2 " size={18} />
           Add Asset
         </button>
 
         <button
-          onClick={() => navigate('/add-license')}
+          onClick={() => navigate("/AddSoftware")}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg mb-2 hover:bg-blue-700 transition">
-        <Plus className="inline-block  mr-2 " size={18}/>
+          <Plus className="inline-block  mr-2 " size={18} />
 
           Add License
         </button>
@@ -67,15 +67,15 @@ function Dashboard() {
         <button
           onClick={() => navigate('/maintenance')}
           className="px-6 py-2 bg-gray-600 text-white font-medium rounded-lg mb-2 hover:bg-gray-700 transition">
-        <Wrench className="inline-block  mr-2 " size={18}/>
- 
+          <Wrench className="inline-block  mr-2 " size={18} />
+
           Maintenance
         </button>
 
         <button
           onClick={() => navigate('/check-in-out')}
           className="px-6 py-2 bg-gray-600 text-white font-medium rounded-lg mb-2 hover:bg-gray-700 transition">
-        <CheckSquare className="inline-block  mr-2 " size={18}/>
+          <CheckSquare className="inline-block  mr-2 " size={18} />
 
           Check-In/Out
         </button>
@@ -85,7 +85,9 @@ function Dashboard() {
       {/* Stats Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+          <Link key={index} to={stat.path} className="block">
+            <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+          </Link>
         ))}
       </div>
     </div>

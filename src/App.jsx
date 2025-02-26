@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import Login from './pages/Authentication/Login';
+import Signup from './pages/Authentication/Signup';
 import Dashboard from './pages/Dashboard/Dashboard';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
-//import SoftwareAssets from "@/pages/SoftwareAssets/SoftwareAssets.jsx";
 import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import EditHardware from './pages/HardwareAssets/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
-
 
 // import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets'
  // <-- Add this import
@@ -18,8 +18,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout><Dashboard /></Layout>} />
+        <Route path="/" element={<Login />} />
+        <Route path="/Signup" element={<Signup />} />
+        <Route path="/Dashboard" element={<Layout><Dashboard /></Layout>} />
         <Route path='/HardwareAssets' element={<Layout><HardwareAssets /></Layout>} />
+        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} />
         <Route path='/SoftwareAssets' element={<Layout><SoftwareAssets /></Layout>} />
         <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} />
         <Route path="/EditSoftwareAssets/:id" element={<Layout><EditSoftwareAssets /></Layout>} />
