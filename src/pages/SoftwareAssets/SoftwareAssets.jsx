@@ -81,10 +81,8 @@ const SoftwareAssets = () => {
     setSelectedSoftware(null);
   };
 
-  const filteredAssets = softwareAssets.filter(asset =>
-    Object.values(asset).some(value =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const filteredAssets = softwareAssets.filter((asset) =>
+    asset.softwarename.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const sortedAssets = [...filteredAssets].sort((a, b) => {

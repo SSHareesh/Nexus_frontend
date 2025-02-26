@@ -121,7 +121,7 @@ function HardwareAssets() {
           </button>
         </div>
       </div>
-
+      
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="w-full text-left border-collapse text-base">
