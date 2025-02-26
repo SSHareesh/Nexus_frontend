@@ -5,10 +5,13 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
 //import SoftwareAssets from "@/pages/SoftwareAssets/SoftwareAssets.jsx";
-
-// import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
-import SoftwareAssets from './pages/SoftwareAssets/SotwareAssets';
+import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
+import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import EditHardware from './pages/HardwareAssets/EditHardware';
+import AddSoftware from './pages/SoftwareAssets/AddSoftware';
+
+
+// import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets'
  // <-- Add this import
 
 function App() {
@@ -18,7 +21,9 @@ function App() {
         <Route path="/" element={<Layout><Dashboard /></Layout>} />
         <Route path='/HardwareAssets' element={<Layout><HardwareAssets /></Layout>} />
         <Route path='/SoftwareAssets' element={<Layout><SoftwareAssets /></Layout>} />
-        <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} /> 
+        <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} />
+        <Route path="/EditSoftwareAssets/:id" element={<Layout><EditSoftwareAssets /></Layout>} />
+        <Route path='/AddSoftware' element={<Layout><AddSoftware /></Layout>} />
         <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} /> 
       </Routes>
     </Router>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
+import { Plus, Filter, Search, Eye, Trash2, Recycle, CheckSquare, Square, X } from "lucide-react";
 import api from "../../utils/api";
+
 
 function HardwareAssets() {
   const navigate = useNavigate();
@@ -9,6 +10,13 @@ function HardwareAssets() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [showDisposeModal, setShowDisposeModal] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [disposalDetails, setDisposalDetails] = useState({
+    repairedOn: "",
+    disposalDate: "",
+    reason: "",
+  });
 
   useEffect(() => {
     const fetchAssets = async () => {
@@ -29,10 +37,58 @@ function HardwareAssets() {
     };
     fetchAssets();
   }, []);
+  
+  
 
   const handleViewMore = (asset) => {
     navigate(`/EditHardware/${asset.assetid}`);
   };
+
+  const handleDisposeClick = (asset) => {
+    setSelectedAsset(asset);
+    setShowDisposeModal(true);
+  };
+
+  const handleDisposalChange = (e) => {
+    const { name, value } = e.target;
+    setDisposalDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDisposalSubmit = async () => {
+    if (!disposalDetails.reason || !disposalDetails.disposalDate) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    const disposalData = {
+        assetid: selectedAsset.assetid,
+        repaired_on: disposalDetails.repairedOn || null,
+        disposaldate: disposalDetails.disposalDate,
+        reason: disposalDetails.reason,
+        comments: disposalDetails.comments || "",
+    };
+
+    try {
+        // Step 1: Update asset status
+        await api.updateAssetById(selectedAsset.assetid, {
+            status: "Disposed"
+        });
+
+        // Step 2: Create a disposal record
+        await api.createDisposed(disposalData);
+
+        await api.deleteAssetById(selectedAsset.assetid);
+
+        alert("Asset successfully disposed and removed from asset management.");
+
+        setShowDisposeModal(false);
+        window.location.reload();
+    } catch (error) {
+        console.error("Error disposing asset:", error);
+        alert("Failed to dispose asset.");
+    }
+};
+
 
   const filterOptions = ["All", "In Stock", "Assigned", "Under Maintenance", "Disposed"];
 
@@ -134,8 +190,8 @@ function HardwareAssets() {
             {filteredAssets.length > 0 ? (
               filteredAssets.map((asset, index) => (
                 <tr key={index} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 border-b">{asset.assetid}</td>
-                  <td className="px-6 py-4 border-b">{asset.assettype}</td>
+                  <td className="px-6 py-4 border-b">{asset.assetid || "N/A"}</td>
+                  <td className="px-6 py-4 border-b">{asset.assettype || "N/A"}</td>
                   <td className="px-6 py-4 border-b">
                     <span
                       className={`px-2 py-1 text-xs rounded ${
@@ -150,11 +206,11 @@ function HardwareAssets() {
                           : "bg-blue-200 text-blue-800"
                       }`}
                     >
-                      {asset.status || "Unknown"}
+                      {asset.status || "N/A"}
                     </span>
                   </td>
                   <td className="px-6 py-4 border-b">{asset.operatingsystem || "N/A"}</td>
-                  <td className="px-6 py-4 border-b">{asset.assigneduserid || " "}</td>
+                  <td className="px-6 py-4 border-b">{asset.assigneduserid || "N/A"}</td>
                   <td className="px-6 py-4 border-b">{formatDate(asset.lastcheckoutdate)}</td>
                   <td className="px-6 py-4 border-b flex space-x-2">
                     <button
@@ -165,18 +221,6 @@ function HardwareAssets() {
                       <Eye size={18} />
                     </button>
                     <button
-                      className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                      title="Delete"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                    <button
-                      className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      title="Dispose"
-                    >
-                      <Archive size={18} />
-                    </button>
-                    <button
                       className={`p-2 rounded ${
                         asset.lastcheckoutdate
                           ? "bg-green-100 text-green-600 hover:bg-green-200"
@@ -185,6 +229,18 @@ function HardwareAssets() {
                       title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
                     >
                       {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
+                    </button>
+                    <button onClick={() => handleDisposeClick(asset)}
+                      className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      title="Dispose"
+                    >
+                      <Recycle size={18} />
+                    </button>
+                    <button
+                      className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
@@ -199,8 +255,83 @@ function HardwareAssets() {
           </tbody>
         </table>
       </div>
+      {showDisposeModal && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+      <button
+        onClick={() => setShowDisposeModal(false)}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+      >
+        <X size={20} />
+      </button>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Dispose Asset</h2>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Repaired On (Optional)</label>
+        <input
+          type="date"
+          name="repairedOn"
+          onChange={handleDisposalChange}
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Disposal Date</label>
+        <input
+          type="date"
+          name="disposalDate"
+          onChange={handleDisposalChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Reason for Disposal</label>
+        <textarea
+          name="reason"
+          placeholder="Enter reason..."
+          onChange={handleDisposalChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          rows="3"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Comments</label>
+        <textarea
+          name="comments"
+          placeholder="Enter your comments..."
+          onChange={handleDisposalChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          rows="3"
+        />
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          onClick={handleDisposalSubmit}
+          className="w-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Dispose
+        </button>
+        <button
+          onClick={() => setShowDisposeModal(false)}
+          className="w-1/2 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition ml-2"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
+  
 
 export default HardwareAssets;
