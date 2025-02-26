@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StatsCard from '../../components/StatsCard/StatsCard';
 import { Package, Boxes, HardDrive, FileCode, Wrench, Trash2, AlertTriangle, Monitor,CheckSquare, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import api from '../../utils/api';
 
 function Dashboard() {
@@ -28,14 +28,14 @@ function Dashboard() {
   }, []);
 
   const stats = [
-    { title: 'Total Assets', value: counts.assetmanage ?? '0', icon: Package },
-    { title: 'Expiring Licenses', value: counts.expiring ?? '0', icon: AlertTriangle },
-    { title: 'In Stock', value: counts.stock ?? '0', icon: Boxes },
-    { title: 'Hardware Assets', value: counts.in_out ?? '0', icon: Monitor },
-    { title: 'Assigned', value: counts.inuse ?? '0', icon: HardDrive },
-    { title: 'Maintenance', value: counts.maintenance_manage ?? '0', icon: Wrench },
-    { title: 'Disposed', value: counts.disposal ?? '0', icon: Trash2 },
-    { title: 'Software Assets', value: counts.softwareassets ?? '0', icon: FileCode },
+    { title: 'Total Assets', value: Number(counts.assetmanage) + Number(counts.softwareassets) || '0', icon: Package },
+    { title: 'Expiring Licenses', value: counts.expiring || '0', icon: AlertTriangle,path:"" },
+    { title: 'In Stock', value: counts.stock || '0', icon: Boxes,path:"/HardwareAssets?filter=instock" },
+    { title: 'Hardware Assets', value: counts.assetmanage || '0', icon: Monitor,path:"/HardwareAssets" },
+    { title: 'Assigned', value: counts.inuse || '0', icon: HardDrive },
+    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench, },
+    { title: 'Disposed', value: counts.disposal || '0', icon: Trash2 ,path:"/HardwareAssets?filter=disposed"},
+    { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode,path:"/SoftwareAssets" },
   ];
 
   return (
@@ -50,14 +50,14 @@ function Dashboard() {
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-around mb-8">
         <button
-          onClick={() => navigate('/AddHardwareAsset')}
+          onClick={() => navigate("/AddHardwareAsset")}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg mb-2 hover:bg-blue-700 transition">
         <Plus className="inline-block  mr-2 " size={18}/>
           Add Asset
         </button>
 
         <button
-          onClick={() => navigate('/add-license')}
+          onClick={() => navigate("/AddSoftware")}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg mb-2 hover:bg-blue-700 transition">
         <Plus className="inline-block  mr-2 " size={18}/>
 
@@ -85,7 +85,9 @@ function Dashboard() {
       {/* Stats Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
+           <Link key={index} to={stat.path} className="block">
           <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+           </Link>
         ))}
       </div>
     </div>

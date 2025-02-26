@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
 import api from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 function HardwareAssets() {
   const navigate = useNavigate();
-  
+
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  
 
   useEffect(() => {
-    const fetchAssets = async () => {
+    
+    
+      const fetchAssets = async () => {
       const response = await api.getAssets();
       console.log("Fetched data:", response.data.data);  // Log the data
 
@@ -24,8 +27,9 @@ function HardwareAssets() {
       }
     };
     fetchAssets();
-  }, []);
   
+  }, []);
+ 
   
 
   const handleViewMore = (asset) => {
@@ -44,12 +48,12 @@ function HardwareAssets() {
     const normalizedStatus = asset.status.trim().toLowerCase();
     const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter =
-      selectedFilter === "All" ||
-      selectedFilter === "" ||
-      (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
-      (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
-      (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
-      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+    selectedFilter === "All" ||
+    selectedFilter === "" ||
+    (selectedFilter.toLowerCase() === "in stock" && normalizedStatus === "instock") ||
+    (selectedFilter.toLowerCase() === "assigned" && normalizedStatus === "assigned") ||
+    (selectedFilter.toLowerCase() === "under maintenance" && normalizedStatus === "maintenance") ||
+    (selectedFilter.toLowerCase() === "disposed" && normalizedStatus === "disposed");
 
     return matchesSearch && matchesFilter;
   });
@@ -67,7 +71,7 @@ function HardwareAssets() {
   return (
     <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-        <h1 className="text-2xl font-bold text-gray-800">Hardware Assets</h1>
+        <h1 className="text-xl font-bold text-gray-800">Hardware Assets</h1>
         <div className="flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -103,6 +107,7 @@ function HardwareAssets() {
                 ))}
               </div>
             )}
+            
           </div>
 
           {/* Add New Button */}
@@ -114,7 +119,7 @@ function HardwareAssets() {
       </div>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse text-sm">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 border-b">Asset ID</th>

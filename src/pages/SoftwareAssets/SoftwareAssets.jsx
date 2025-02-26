@@ -74,7 +74,7 @@ const SoftwareAssets = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Software Assets</h1>
+        <h1 className="text-xl font-bold text-gray-800">Software Assets</h1>
         <div className="flex space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -103,7 +103,7 @@ const SoftwareAssets = () => {
       )}
 
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <table className="w-full border-collapse text-base">
+        <table className="w-full border-collapse text-sm">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {Object.keys(columnMappings).map((col) => (
