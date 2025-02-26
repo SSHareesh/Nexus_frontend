@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function HardwareAssets() {
   const navigate = useNavigate();
-  
+
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -25,8 +25,8 @@ function HardwareAssets() {
     };
     fetchAssets();
   }, []);
-  
-  
+
+
 
   const handleViewMore = (asset) => {
     navigate(`/EditHardware/${asset.assetid}`);
@@ -67,7 +67,7 @@ function HardwareAssets() {
   return (
     <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-        <h1 className="text-2xl font-bold text-gray-800">Hardware Assets</h1>
+        <h1 className="text-xl font-bold text-gray-800">Hardware Assets</h1>
         <div className="flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -107,13 +107,13 @@ function HardwareAssets() {
 
           {/* Add New Button */}
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/AddHardwareAsset")}>
-            <Plus className="inline-block mr-2" size={18}  />
+            <Plus className="inline-block mr-2" size={18} />
             Add New
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg text-base">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-100">

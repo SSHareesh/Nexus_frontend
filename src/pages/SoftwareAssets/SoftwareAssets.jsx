@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Search, Plus, Eye, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
+import { format, isPast, differenceInDays } from 'date-fns';
 
 const columnMappings = {
   softwarename: "Software Name",
@@ -18,7 +19,7 @@ const SoftwareAssets = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState("licenseexpirydate");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [message, setMessage] = useState(""); // State for success message
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,51 +60,71 @@ const SoftwareAssets = () => {
 
     try {
       const response = await api.deleteSoftwareById(softwareId);
-      setSoftwareAssets(softwareAssets.filter((asset) => asset.softwareid !== softwareId)); // Remove deleted asset
-      setMessage(response.data.message); // Show success message
-      setTimeout(() => setMessage(""), 3000); // Clear message after 3 seconds
+      setSoftwareAssets(softwareAssets.filter((asset) => asset.softwareid !== softwareId));
+      setMessage(response.data.message);
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting software asset:", error);
     }
   };
 
-  const sortedAssets = [...softwareAssets].sort((a, b) =>
-    sortOrder === "asc" ? (a[sortColumn] > b[sortColumn] ? 1 : -1) : (a[sortColumn] < b[sortColumn] ? 1 : -1)
-  );
+  const sortedAssets = [...softwareAssets].sort((a, b) => {
+    if (sortColumn === 'licenseexpirydate') {
+      const dateA = new Date(a[sortColumn]);
+      const dateB = new Date(b[sortColumn]);
+
+      if (sortOrder === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    }
+    return sortOrder === "asc" ? (a[sortColumn] > b[sortColumn] ? 1 : -1) : (a[sortColumn] < b[sortColumn] ? 1 : -1);
+  });
+
+  const getExpiryDateDisplay = (date) => {
+    const expiryDate = new Date(date);
+    const formattedDate = format(expiryDate, 'MMMM dd, yyyy');
+
+    if (isPast(expiryDate)) {
+      return <span className="text-red-500">{formattedDate} (Expired)</span>;
+    } else if (differenceInDays(expiryDate, new Date()) <= 30) {
+      return <span className="text-yellow-500">{formattedDate} (Expiring Soon)</span>;
+    } else {
+      return formattedDate;
+    }
+  };
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Software Assets</h1>
-        <div className="flex space-x-4">
-          <div className="relative">
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-xl md:text-xl font-bold text-gray-800">Software Assets</h1>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <div className="relative w-full md:w-auto">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
-            />
+              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base w-full" />
           </div>
           <button
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-base"
-            onClick={handleCreate}
-          >
+            onClick={handleCreate}>
             <Plus size={18} className="mr-2" /> Add New
           </button>
         </div>
       </div>
 
-      {/* Success Message */}
       {message && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
           {message}
         </div>
       )}
 
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <table className="w-full border-collapse text-base">
+      <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+        <table className="min-w-full border-collapse text-base">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {Object.keys(columnMappings).map((col) => (
@@ -127,7 +148,7 @@ const SoftwareAssets = () => {
                 <td className="p-3 text-center">{software.softwareversion}</td>
                 <td className="p-3 text-center">{software.assetid}</td>
                 <td className="p-3 text-center">{software.assigneduserid}</td>
-                <td className="p-3 text-center">{software.licenseexpirydate}</td>
+                <td className="p-3 text-center">{getExpiryDateDisplay(software.licenseexpirydate)}</td>
                 <td className="p-3 text-center">{software.project}</td>
                 <td className="px-4 py-2 border-b flex justify-center space-x-2">
                   <button
