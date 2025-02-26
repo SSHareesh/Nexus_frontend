@@ -8,8 +8,11 @@ import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
 import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
-import EditHardware from './pages/EditHardware/EditHardware';
+import EditHardware from './pages/HardwareAssets/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
+
+// import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets'
+ // <-- Add this import
 
 function App() {
   return (
@@ -24,6 +27,7 @@ function App() {
         <Route path='/EditHardware/:id' element={<Layout><EditHardware /></Layout>} />
         <Route path="/EditSoftwareAssets/:id" element={<Layout><EditSoftwareAssets /></Layout>} />
         <Route path='/AddSoftware' element={<Layout><AddSoftware /></Layout>} />
+        <Route path='/AddHardwareAsset' element={<Layout><AddHardwareAsset /></Layout>} /> 
       </Routes>
     </Router>
   );
