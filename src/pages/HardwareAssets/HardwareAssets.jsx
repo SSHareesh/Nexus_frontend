@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Filter, Search, Eye, Trash2, Archive, CheckSquare, Square } from "lucide-react";
 import api from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 function HardwareAssets() {
   const navigate = useNavigate();
@@ -10,9 +10,12 @@ function HardwareAssets() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  
 
   useEffect(() => {
-    const fetchAssets = async () => {
+    
+    
+      const fetchAssets = async () => {
       const response = await api.getAssets();
       console.log("Fetched data:", response.data.data);  // Log the data
 
@@ -24,9 +27,16 @@ function HardwareAssets() {
       }
     };
     fetchAssets();
+<<<<<<< HEAD
   }, []);
 
 
+=======
+  
+  }, []);
+ 
+  
+>>>>>>> d3e6536e076b0820a5e51aa5e00d25fb6b4bd618
 
   const handleViewMore = (asset) => {
     navigate(`/EditHardware/${asset.assetid}`);
@@ -44,12 +54,12 @@ function HardwareAssets() {
     const normalizedStatus = asset.status.trim().toLowerCase();
     const matchesSearch = asset.assetid.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter =
-      selectedFilter === "All" ||
-      selectedFilter === "" ||
-      (selectedFilter === "In Stock" && normalizedStatus === "instock") ||
-      (selectedFilter === "Assigned" && normalizedStatus === "assigned") ||
-      (selectedFilter === "Under Maintenance" && normalizedStatus === "maintenance") ||
-      (selectedFilter === "Disposed" && normalizedStatus === "disposed");
+    selectedFilter === "All" ||
+    selectedFilter === "" ||
+    (selectedFilter.toLowerCase() === "in stock" && normalizedStatus === "instock") ||
+    (selectedFilter.toLowerCase() === "assigned" && normalizedStatus === "assigned") ||
+    (selectedFilter.toLowerCase() === "under maintenance" && normalizedStatus === "maintenance") ||
+    (selectedFilter.toLowerCase() === "disposed" && normalizedStatus === "disposed");
 
     return matchesSearch && matchesFilter;
   });
@@ -103,6 +113,7 @@ function HardwareAssets() {
                 ))}
               </div>
             )}
+            
           </div>
 
           {/* Add New Button */}
@@ -113,8 +124,13 @@ function HardwareAssets() {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="overflow-x-auto bg-white shadow-md rounded-lg text-base">
         <table className="w-full text-left border-collapse">
+=======
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="w-full text-left border-collapse text-sm">
+>>>>>>> d3e6536e076b0820a5e51aa5e00d25fb6b4bd618
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 border-b">Asset ID</th>

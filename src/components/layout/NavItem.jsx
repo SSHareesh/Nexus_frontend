@@ -40,7 +40,7 @@ const NavItem = ({ icon: Icon, label, count = 0, isCollapsed }) => {
   const location = useLocation();
 
   const paths = {
-    Dashboard: "/",
+    "Dashboard": "/Dashboard",
     "Hardware Assets": "/HardwareAssets",
     "Software Assets": "/SoftwareAssets",
     "Assigned Assets": "/assigned-assets",
