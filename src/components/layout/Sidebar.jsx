@@ -7,7 +7,7 @@ const navItems = [
   { icon: Monitor, label: 'Hardware Assets', count: 0 },
   { icon: FileCode, label: 'Software Assets', count: 0 },
   { icon: Wrench, label: 'Maintenance', count: 0 },
-  { icon: Users, label: 'Employees', count: 0 },
+  { icon: Users, label: 'User Details', count: 0 },
   { icon: NotebookPen, label: 'Audit Logs', count: 0 },
   { icon: Bell, label: 'Notifications', count: 5 },
   { icon: FileText, label: 'Report', count: 0 }

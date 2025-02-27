@@ -40,5 +40,4 @@ const api = {
     getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`)
 };
 
-// Ensure proper export
 export default api;

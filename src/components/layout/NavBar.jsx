@@ -9,7 +9,7 @@ const NavBar = ({ notifications = 5 }) => {
     { icon: HardDrive, path: '/hardware' },
     { icon: FileCode, path: '/software' },
     { icon: Tool, path: '/maintenance' },
-    { icon: Users, path: '/employees' },
+    { icon: Users, path: '/Users' },
     { icon: ClipboardList,  path: '/audit' },
   ];
 
