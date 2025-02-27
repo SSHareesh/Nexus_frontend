@@ -28,14 +28,14 @@ function Dashboard() {
   }, []);
 
   const stats = [
-    { title: 'Total Assets', value: Number(counts.assetmanage) + Number(counts.softwareassets) || '0', icon: Package },
-    { title: 'Expiring Licenses', value: counts.expiring || '0', icon: AlertTriangle, path: "/SoftwareAssets?filter=expiring" },
-    { title: 'In Stock', value: counts.stock || '0', icon: Boxes, path: "/HardwareAssets?filter=in stock" },
-    { title: 'Hardware Assets', value: counts.assetmanage || '0', icon: Monitor, path: "/HardwareAssets" },
-    { title: 'Assigned', value: counts.inuse || '0', icon: HardDrive, path: "/HardwareAssets?filter=assigned" },
-    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench, path: "/HardwareAssets?filter=under maintenance" },
-    { title: 'Disposed', value: counts.disposal || '0', icon: Trash2, path: "/HardwareAssets?filter=disposed" },
-    { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode, path: "/SoftwareAssets" },
+    { title: 'Total Assets', value: counts.assetmanage ?? '0', icon: Package },
+    { title: 'Expiring Licenses', value: counts.expiring ?? '0', icon: AlertTriangle },
+    { title: 'In Stock', value: counts.stock ?? '0', icon: Boxes },
+    { title: 'Hardware Assets', value: counts.assetmanage ?? '0', icon: Monitor },
+    { title: 'Assigned', value: counts.inuse ?? '0', icon: HardDrive },
+    { title: 'Maintenance', value: counts.maintenance_manage ?? '0', icon: Wrench },
+    { title: 'Disposed', value: counts.disposal ?? '0', icon: Trash2 },
+    { title: 'Software Assets', value: counts.softwareassets ?? '0', icon: FileCode },
   ];
 
   return (

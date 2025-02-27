@@ -8,7 +8,7 @@ import HardwareAssets from './pages/HardwareAssets/HardwareAssets';
 import AddHardwareAsset from './pages/HardwareAssets/AddHardwareAsset';
 import EditSoftwareAssets from './pages/SoftwareAssets/EditSoftwareAssets';
 import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
-import EditHardware from './pages/EditHardware/EditHardware';
+import EditHardware from './pages/HardwareAssets/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
 import Users from './pages/Users/Users';
 

@@ -7,7 +7,20 @@ const api = {
     getAssets: () => axios.get(`${BASE_URL}/assets`),
     getAssetById: (id) => axios.get(`${BASE_URL}/assets/${id}`),
     createAsset: (data) => axios.post(`${BASE_URL}/assets`, data),
-    updateAssetById: (id, data) => axios.put(`${BASE_URL}/assets/${id}`, data),
+    updateAssetById: async (id, data) => {
+        try {
+            // empty values are converted to null before sending
+            const sanitizedData = Object.fromEntries(
+                Object.entries(data).map(([key, value]) => [key, value === "" ? null : value])
+            );
+    
+            return await axios.put(`${BASE_URL}/assets/${id}`, sanitizedData);
+        } catch (error) {
+            console.error("Error in updateAssetById:", error);
+            throw error;
+        }
+    },
+    
     deleteAssetById: (id) => axios.delete(`${BASE_URL}/assets/${id}`),
 
     // Software Routes
@@ -37,7 +50,10 @@ const api = {
 
     // Count Routes
     getCounts: () => axios.get(`${BASE_URL}/count`),
-    getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`)
+    getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`),
+
+    getDisposed: ()=> axios.get(`${BASE_URL}/disposal`),
+    createDisposed: (data)=> axios.post(`${BASE_URL}/disposal`, data)
 };
 
 export default api;
