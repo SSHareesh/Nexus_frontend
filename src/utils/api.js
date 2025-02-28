@@ -9,7 +9,6 @@ const api = {
     createAsset: (data) => axios.post(`${BASE_URL}/assets`, data),
     updateAssetById: async (id, data) => {
         try {
-            // empty values are converted to null before sending
             const sanitizedData = Object.fromEntries(
                 Object.entries(data).map(([key, value]) => [key, value === "" ? null : value])
             );

@@ -43,17 +43,17 @@ const AddHardwareAsset = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    console.log("📝 Submitting asset:", formData);
+    console.log(" Submitting asset:", formData);
     
     const assetData = { data: [formData] }; // Wrap in data array
 
     try {
         const response = await api.createAsset(assetData);
-        console.log("✅ Response:", response.data);
+        console.log(" Response:", response.data);
         alert("Hardware Asset Added Successfully!");
         navigate("/HardwareAssets");
     } catch (error) {
-        console.error("❌ Error adding hardware asset:", error.response?.data || error.message);
+        console.error(" Error adding hardware asset:", error.response?.data || error.message);
         alert("Failed to add asset. Please try again.");
     }
 };

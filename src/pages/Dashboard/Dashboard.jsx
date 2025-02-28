@@ -28,20 +28,20 @@ function Dashboard() {
   }, []);
 
   const stats = [
-    { title: 'Total Assets', value: counts.assetmanage ?? '0', icon: Package },
-    { title: 'Expiring Licenses', value: counts.expiring ?? '0', icon: AlertTriangle },
-    { title: 'In Stock', value: counts.stock ?? '0', icon: Boxes },
-    { title: 'Hardware Assets', value: counts.assetmanage ?? '0', icon: Monitor },
-    { title: 'Assigned', value: counts.inuse ?? '0', icon: HardDrive },
-    { title: 'Maintenance', value: counts.maintenance_manage ?? '0', icon: Wrench },
-    { title: 'Disposed', value: counts.disposal ?? '0', icon: Trash2 },
-    { title: 'Software Assets', value: counts.softwareassets ?? '0', icon: FileCode },
+    { title: 'Total Assets', value: Number(counts.assetmanage) + Number(counts.softwareassets) || '0', icon: Package },
+    { title: 'Expiring Licenses', value: counts.expiring || '0', icon: AlertTriangle,path:'/SoftwareAssets?filter=expiring' },
+    { title: 'In Stock', value: counts.stock || '0', icon: Boxes,path:'/HardwareAssets?filter=in stock' },
+    { title: 'Hardware Assets', value: counts.assetmanage || '0', icon: Monitor,path:'/HardwareAssets' },
+    { title: 'Assigned', value: counts.inuse || '0', icon: HardDrive,path:'/HardwareAssets?filter=assigned' },
+    { title: 'Maintenance', value: counts.maintenance_manage || '0', icon: Wrench,path:'/HardwareAssets?filter=under maintenance' },
+    { title: 'Disposed', value: counts.disposal || '0', icon: Trash2,path:'/HardwareAssets?filter=disposed' },
+    { title: 'Software Assets', value: counts.softwareassets || '0', icon: FileCode,path:'/SoftwareAssets' },
   ];
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
           Notifications
         </button>
@@ -65,7 +65,7 @@ function Dashboard() {
         </button>
 
         <button
-          onClick={() => navigate('/maintenance')}
+          onClick={() => navigate('/MaintenanceRecords')}
           className="px-6 py-2 bg-gray-600 text-white font-medium rounded-lg mb-2 hover:bg-gray-700 transition">
           <Wrench className="inline-block  mr-2 " size={18} />
 

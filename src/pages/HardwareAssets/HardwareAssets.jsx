@@ -127,23 +127,23 @@ function HardwareAssets() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+    <div className="p-4 md:p-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 ">
         <h1 className="text-xl font-bold text-gray-800">Hardware Assets</h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <div className="relative w-full md:w-auto">
+            <Search className="absolute left-3 top-2.5  text-gray-400" size={18} />
             <input
               type="text"
               placeholder="Search assets..."
-              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           {/* Filter Dropdown */}
-          <div className="relative">
+          <div className="relative w-full md:w-auto">
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="px-4 py-2 flex items-center bg-gray-200 rounded-lg hover:bg-gray-300 transition"
@@ -173,8 +173,8 @@ function HardwareAssets() {
           </div>
 
           {/* Add New Button */}
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/AddHardwareAsset")}>
-            <Plus className="inline-block mr-2" size={18}  />
+          <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/AddHardwareAsset")}>
+            <Plus className=" mr-2" size={18}  />
             Add New
           </button>
         </div>

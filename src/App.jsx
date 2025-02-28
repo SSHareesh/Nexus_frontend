@@ -11,6 +11,7 @@ import SoftwareAssets from './pages/SoftwareAssets/SoftwareAssets';
 import EditHardware from './pages/HardwareAssets/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
 import Users from './pages/Users/Users';
+import MaintenanceRecords from './pages/Maintenance/Maintenance';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/EditSoftwareAssets/:id" element={<Layout><EditSoftwareAssets /></Layout>} />
         <Route path='/AddSoftware' element={<Layout><AddSoftware /></Layout>} />
         <Route path='/Users' element={<Layout><Users /></Layout>} />
+        <Route path='/MaintenanceRecords' element={<Layout><MaintenanceRecords /></Layout>} />
 
       </Routes>
     </Router>
