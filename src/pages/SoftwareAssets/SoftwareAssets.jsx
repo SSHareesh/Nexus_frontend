@@ -77,6 +77,7 @@ const SoftwareAssets = () => {
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting software asset:", error);
+      alert("Error deleting software asset")
     }
     setSelectedSoftware(null);
   };

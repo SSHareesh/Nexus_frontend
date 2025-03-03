@@ -12,8 +12,10 @@ import EditHardware from './pages/HardwareAssets/EditHardware';
 import AddSoftware from './pages/SoftwareAssets/AddSoftware';
 import Users from './pages/Users/Users';
 import AddUser from './pages/Users/AddUser';
+import EditUser from './pages/Users/EditUser';
 import MaintenanceRecords from './pages/Maintenance/Maintenance';
 import AddMaintenance from './pages/Maintenance/AddMaintenance';
+import EditMaintenance from './pages/Maintenance/EditMaintenance';
 
 function App() {
   return (
@@ -30,8 +32,10 @@ function App() {
         <Route path='/AddSoftware' element={<Layout><AddSoftware /></Layout>} />
         <Route path='/Users' element={<Layout><Users /></Layout>} />
         <Route path='/AddUser' element={<Layout><AddUser/></Layout>} />
+        <Route path='/EditUser/:id' element={<Layout><EditUser/></Layout>} />
         <Route path='/MaintenanceRecords' element={<Layout><MaintenanceRecords /></Layout>} />
         <Route path='/AddMaintenance' element={<Layout><AddMaintenance /></Layout>} />
+        <Route path='/EditMaintenance/:id' element={<Layout><EditMaintenance /></Layout>} />
 
       </Routes>
     </Router>

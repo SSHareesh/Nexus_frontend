@@ -13,6 +13,7 @@ function HardwareAssets() {
   const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("");
+  const [message,setMessage] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [showDisposeModal, setShowDisposeModal] = useState(false);
@@ -88,7 +89,7 @@ function HardwareAssets() {
 
         await api.deleteAssetById(selectedAsset.assetid);
 
-        alert("Asset successfully disposed and removed from asset management.");
+        setMessage("Asset successfully disposed and removed from asset management.");
 
         setShowDisposeModal(false);
         window.location.reload();
@@ -179,7 +180,12 @@ function HardwareAssets() {
           </button>
         </div>
       </div>
-      
+
+      {message && (
+        <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
+          {message}
+        </div>
+      )}
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="w-full text-left border-collapse text-base">

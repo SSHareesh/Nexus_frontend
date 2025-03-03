@@ -6,6 +6,8 @@ import { Save, X, Edit } from "lucide-react";
 const EditSoftware = () => {
     const { id: softwareid } = useParams();
     const navigate = useNavigate();
+    const [error,setError] = useState("");
+    const [message,setMessage] = useState();
     const [software, setSoftware] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -28,9 +30,10 @@ const EditSoftware = () => {
     const handleSave = async () => {
         try {
             await api.updateSoftwareById(softwareid, software);
-            navigate("/SoftwareAssets");
+            setMessage("Data updated successfully");
+            setTimeout(() => navigate("/SoftwareAssets"),2000);
         } catch (error) {
-            console.error("Error updating software asset:", error);
+            setError("Error updating software asset:", error);
         }
     };
 
@@ -39,6 +42,12 @@ const EditSoftware = () => {
     return (
         <div className="p-8">
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit Software Asset</h1>
+            {error && <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg">{error}</div>}
+            {message && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
+                 {message}
+                </div>
+            )}
 
             <div className="bg-white p-6 shadow-lg rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
