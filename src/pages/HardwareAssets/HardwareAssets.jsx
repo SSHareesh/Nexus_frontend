@@ -50,6 +50,7 @@ const handleCheckoutSubmit = async () => {
       lastcheckoutdate: checkoutDetails.checkoutDate,
       assigneduserid: checkoutDetails.assignedUserId,
       status: "Assigned",
+      isCheckoutAgain: true,
     });
 
     alert("Asset successfully checked out.");
@@ -109,31 +110,34 @@ const handleCheckoutSubmit = async () => {
         return;
     }
 
+    const formatDate = (date) => {
+      if (!date) return null; 
+      const parsedDate = new Date(date);
+      return isNaN(parsedDate.getTime()) ? null : parsedDate.toISOString().split("T")[0];
+  };
+
+    // Ensure disposalDate and repairedOn are valid date strings
     const disposalData = {
-        assetid: selectedAsset.assetid,
-        repaired_on: disposalDetails.repairedOn || null,
-        disposaldate: disposalDetails.disposalDate,
-        reason: disposalDetails.reason,
-        comments: disposalDetails.comments || "",
-    };
+      assetid: selectedAsset.assetid,
+      repaired_on: formatDate(disposalDetails.repairedOn),
+      disposaldate: formatDate(disposalDetails.disposalDate),
+      reason: disposalDetails.reason,
+      comments: disposalDetails.comments || "",
+  };
+  
 
     try {
-        // Step 1: Update asset status
-        await api.updateAssetById(selectedAsset.assetid, {
-            status: "Disposed"
-        });
+      
 
-        // Step 2: Create a disposal record
+        // ✅ Step 2: Create a disposal record
         await api.createDisposed(disposalData);
 
-        await api.deleteAssetById(selectedAsset.assetid);
-
-        alert("Asset successfully disposed and removed from asset management.");
+        alert("Asset successfully disposed.");
 
         setShowDisposeModal(false);
-        window.location.reload();
+        window.location.reload(); // Refresh page to reflect changes
     } catch (error) {
-        console.error("Error disposing asset:", error);
+        console.error("❌ Error disposing asset:", error);
         alert("Failed to dispose asset.");
     }
 };
