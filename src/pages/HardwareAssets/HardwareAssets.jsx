@@ -23,6 +23,46 @@ function HardwareAssets() {
     reason: "",
     comments: "",
   });
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+const [checkoutDetails, setCheckoutDetails] = useState({
+  assetid: "",
+  checkoutDate: "",
+  assignedUserId: "",
+});
+
+const handleCheckoutClick = (asset) => {
+  setCheckoutDetails({ assetid: asset.assetid, checkoutDate: "", assignedUserId: "" });
+  setShowCheckoutModal(true);
+};
+
+const handleCheckoutChange = (e) => {
+  const { name, value } = e.target;
+  setCheckoutDetails((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleCheckoutSubmit = async () => {
+  if (!checkoutDetails.checkoutDate || !checkoutDetails.assignedUserId) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    await api.updateAssetById(checkoutDetails.assetid, {
+      lastcheckoutdate: checkoutDetails.checkoutDate,
+      assigneduserid: checkoutDetails.assignedUserId,
+      status: "Assigned",
+    });
+
+    alert("Asset successfully checked out.");
+    setShowCheckoutModal(false);
+    window.location.reload();
+  } catch (error) {
+    console.error("Error during checkout:", error);
+    alert("Failed to check out asset.");
+  }
+};
+
+
 
   useEffect(() => {
 
@@ -235,15 +275,35 @@ function HardwareAssets() {
                       <Eye size={18} />
                     </button>
                     <button
+                      onClick={() => {
+                        if (asset.lastcheckoutdate && asset.check_in) {
+                          handleCheckoutClick(asset); // Call function only if it's "Check-out Again"
+                        }
+                      }}
                       className={`p-2 rounded ${
-                        asset.lastcheckoutdate
-                          ? "bg-green-100 text-green-600 hover:bg-green-200"
-                          : "bg-yellow-100 text-yellow-600 hover:bg-yellow-200"
+                        !asset.lastcheckoutdate
+                          ? "bg-yellow-100 text-yellow-600 hover:bg-yellow-200" // Check-out if lastcheckoutdate is missing
+                          : !asset.check_in
+                          ? "bg-green-100 text-green-600 hover:bg-green-200" // Check-in if lastcheckindate is missing
+                          : "bg-blue-100 text-blue-600 hover:bg-blue-200" // Check-out again if both are present
                       }`}
-                      title={asset.lastcheckoutdate ? "Check-in" : "Check-out"}
+                      title={
+                        !asset.lastcheckoutdate
+                          ? "Check-out"
+                          : !asset.check_in
+                          ? "Check-in"
+                          : "Check-out Again"
+                      }
                     >
-                      {asset.lastcheckoutdate ? <CheckSquare size={18} /> : <Square size={18} />}
+                      {!asset.lastcheckoutdate ? (
+                        <Square size={18} />
+                      ) : !asset.check_in ? (
+                        <CheckSquare size={18} />
+                      ) : (
+                        <Square size={18} />
+                      )}
                     </button>
+
                     <button onClick={() => handleDisposeClick(asset)}
                       className="p-2 rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
                       title="Dispose"
@@ -342,6 +402,70 @@ function HardwareAssets() {
     </div>
   </div>
 )}
+
+{showCheckoutModal && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+      <button
+        onClick={() => setShowCheckoutModal(false)}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+      >
+        <X size={20} />
+      </button>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Check-out Asset</h2>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Asset ID</label>
+        <input
+          type="text"
+          name="assetid"
+          value={checkoutDetails.assetid}
+          readOnly
+          className="w-full px-3 py-2 border rounded-lg bg-gray-100"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Check-out Date</label>
+        <input
+          type="date"
+          name="checkoutDate"
+          onChange={handleCheckoutChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Assigned User ID</label>
+        <input
+          type="text"
+          name="assignedUserId"
+          placeholder="Enter User ID..."
+          onChange={handleCheckoutChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          onClick={handleCheckoutSubmit}
+          className="w-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Check-out
+        </button>
+        <button
+          onClick={() => setShowCheckoutModal(false)}
+          className="w-1/2 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition ml-2"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
     </div>
   );
