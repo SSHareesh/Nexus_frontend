@@ -21,7 +21,8 @@ const AddUser = () => {
       [name]: value === "" ? null : value, // Convert empty strings to null
     }));
   };
-
+  const [error,setError] = useState("");
+  const [successMessage,setSuccessMessage]=useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -30,17 +31,19 @@ const AddUser = () => {
     try {
       const response = await api.createUser(formData);
       console.log("Response:", response.data);
-      alert("User Added Successfully!");
-      navigate("/Users");
+      setSuccessMessage("User Added Successfully!");
+      setTimeout(() => navigate("/Users"),2000);
     } catch (error) {
       console.error("Error adding user:", error.response?.data || error.message);
-      alert("Failed to add user. Please try again.");
+      setError("Failed to add user. Please try again.");
     }
   };
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Add User</h1>
+      {error && <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg">{error}</div>}
+      {successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg">{successMessage}</div>}
 
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-lg rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -61,14 +64,13 @@ const AddUser = () => {
           ))}
         </div>
 
-        <div className="mt-6">
+
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-          >
+            className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
             Add User
           </button>
-        </div>
+        
       </form>
     </div>
   );

@@ -60,9 +60,10 @@ const MaintenanceRecords = () => {
       await api.deleteMaintenanceRecordById(selectedRecord.maintenanceid);
       setRecords(records.filter(record => record.maintenanceid !== selectedRecord.maintenanceid));
       setMessage(`Maintenance record deleted successfully.`);
-      setTimeout(() => setMessage(""), 3000);
+      setTimeout(() => setMessage(""), 2000);
     } catch (error) {
       console.error("Error deleting maintenance record:", error);
+      alert("Error deleting maintenance record")
     }
     setSelectedRecord(null);
   };
@@ -81,8 +82,17 @@ const MaintenanceRecords = () => {
       : new Date(valB) - new Date(valA);
   }  
   return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
-  
-});
+  });
+
+  const formatDate = (isoString) => {
+    if (!isoString) return "N/A";
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
 
 
 
@@ -117,7 +127,7 @@ const MaintenanceRecords = () => {
       )}
 
       <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
-        <table className="min-w-full border-collapse text-base">
+        <table className="min-w-full border-collapse text-sm ">
           <thead className="bg-gray-200 text-gray-700">
             <tr>
               {Object.keys(columnMappings).map((col) => (
@@ -140,12 +150,12 @@ const MaintenanceRecords = () => {
                 <td className="p-3 text-center">{record.assetid}</td>
                 <td className="p-3 text-center">{record.maintenanceid}</td>
                 <td className="p-3 text-center">{record.issue}</td>
-                <td className="p-3 text-center">{record.resolution_date}</td>
+                <td className="p-3 text-center">{formatDate(record.resolution_date)}</td>
                 <td className="p-3 text-center">{record.cost}</td>
                 <td className="p-3 text-center">{record.vendor}</td>
                 <td className="p-3 text-center">{record.approval_status}</td>
                 <td className="p-3 text-center">{record.comments}</td>
-                <td className="p-3 text-center">{record.request_date}</td>
+                <td className="p-3 text-center">{formatDate(record.request_date)}</td>
                 <td className="px-4 py-2 border-b flex justify-center space-x-2">
                   <button className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200" onClick={() => handleViewMore(record)}>
                     <Eye size={18} />

@@ -59,6 +59,7 @@ const Users = () => {
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting user:", error);
+      alert("Error deleting user")
     }
     setSelectedUser(null);
   };
@@ -133,7 +134,7 @@ const Users = () => {
                   <button className="p-2 rounded bg-blue-100 text-blue-600 hover:bg-blue-200" onClick={() => handleViewMore(user)}>
                     <Eye size={18} />
                   </button>
-                  <button className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200" onClick={() => setSelectedUser(user)}>
+                  <button className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200" onClick={() => handleDelete(user)}>
                     <Trash2 size={18} />
                   </button>
                 </td>

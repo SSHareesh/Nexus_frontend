@@ -3,75 +3,66 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import { Save, X, Edit } from "lucide-react";
 
-const EditHardware = () => {
-    const { id: hardwareId } = useParams();
+const EditUser = () => {
+    const { id: userId } = useParams();
     const navigate = useNavigate();
-    const [error,setError] = useState("");
-    const [message,setMessage] = useState("");
-    const [hardware, setHardware] = useState(null);
+    const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-      const fetchHardwareById = async () => {
-          try {
-              const response = await api.getAssetById(hardwareId);
-              console.log("Hardware data:", response.data); // Log response
-              setHardware(response.data); // Remove `.data.data` if unnecessary
-          } catch (error) {
-              console.error("Error fetching hardware asset:", error);
-          }
-      };
-      fetchHardwareById();
-  }, [hardwareId]);
-  
+        const fetchUserById = async () => {
+            try {
+                const response = await api.getUserById(userId);
+                console.log("User data:", response.data);
+                setUser(response.data); 
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        };
+        fetchUserById();
+    }, [userId]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setHardware({ 
-        ...hardware, 
-        [name]: value.trim() === "" ? null : value  // Convert empty strings to null
-    });
-};
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser({
+            ...user,
+            [name]: value.trim() === "" ? null : value, // Convert empty fields to null
+        });
+    };
+   const [successMessage,setSuccessMessage]=useState("");
+   const [error,setError]=useState("");
+    const handleSave = async () => {
+        try {
+            const updatedUser = { ...user };
 
+            // Ensure `null` is set for empty fields
+            Object.keys(updatedUser).forEach((key) => {
+                if (updatedUser[key] === "") {
+                    updatedUser[key] = null;
+                }
+            });
+            setSuccessMessage("User details updated successfully")
+            console.log("Updating user:", updatedUser);
 
-const handleSave = async () => {
-  try {
-      const updatedHardware = { ...hardware };
+            await api.updateUserById(userId, updatedUser);
+            setTimeout(() => navigate("/Users"),2000);
+        } catch (error) {
+            setError("Error updating user:", error);
+        }
+    };
 
-      // Ensure `null` is set for empty fields
-      Object.keys(updatedHardware).forEach(key => {
-          if (updatedHardware[key] === "") {
-              updatedHardware[key] = null;
-          }
-      });
-
-      console.log("Data being sent to API:", updatedHardware);
-
-      await api.updateAssetById(hardwareId, updatedHardware);
-      setMessage("Data updated successfully")
-      setTimeout(() => navigate("/HardwareAssets"),2000);
-  } catch (error) {
-      console.error("Error updating hardware asset:", error);
-      setError("Error updating the Asset details");
-  }
-};
-
-
-    if (!hardware) return <div>Loading...</div>;
+    if (!user) return <div>Loading...</div>;
 
     return (
         <div className="p-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit Hardware Asset</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit User</h1>
+            {successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg">{successMessage}</div>}
             {error && <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg">{error}</div>}
-            {message && (
-                <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
-                 {message}
-                </div>
-            )}
+
 
             <div className="bg-white p-6 shadow-lg rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {Object.keys(hardware).map((key) => (
+                    {Object.keys(user).map((key) => (
                         <div key={key}>
                             <label className="block text-gray-700 font-medium capitalize">
                                 {key.replace(/_/g, " ")}
@@ -79,10 +70,12 @@ const handleSave = async () => {
                             <input
                                 type="text"
                                 name={key}
-                                value={hardware[key] || ""}
+                                value={user[key] || ""}
                                 onChange={handleChange}
                                 disabled={!isEditing}
-                                className={`w-full p-2 border rounded-lg focus:outline-none ${isEditing ? "focus:ring-2 focus:ring-blue-500" : "bg-gray-100"}`}
+                                className={`w-full p-2 border rounded-lg focus:outline-none ${
+                                    isEditing ? "focus:ring-2 focus:ring-blue-500" : "bg-gray-100"
+                                }`}
                             />
                         </div>
                     ))}
@@ -100,6 +93,7 @@ const handleSave = async () => {
                     )}
                     {isEditing && (
                         <>
+
                             <button
                                 onClick={handleSave}
                                 className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
@@ -122,4 +116,4 @@ const handleSave = async () => {
     );
 };
 
-export default EditHardware;
+export default EditUser;

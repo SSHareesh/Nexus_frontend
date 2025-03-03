@@ -4,6 +4,8 @@ import api from "../../utils/api"; // Import API functions
 
 const AddHardwareAsset = () => {
   const navigate = useNavigate();
+  const [error,setError] = useState("");
+  const [message,setMessage]= useState("");
   const [formData, setFormData] = useState({
     assetId: "",
     assetType: "",
@@ -50,18 +52,23 @@ const AddHardwareAsset = () => {
     try {
         const response = await api.createAsset(assetData);
         console.log(" Response:", response.data);
-        alert("Hardware Asset Added Successfully!");
-        navigate("/HardwareAssets");
+        setMessage("Hardware Asset Added Successfully!");
+        setTimeout(() => navigate("/HardwareAssets"),2000);
     } catch (error) {
         console.error(" Error adding hardware asset:", error.response?.data || error.message);
-        alert("Failed to add asset. Please try again.");
+        setError("Failed to add asset. Please try again.");
     }
 };
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Add Hardware Asset</h1>
-
+      {error && <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg">{error}</div>}
+      {message && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded-lg text-center">
+                 {message}
+                </div>
+      )}
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-lg rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.keys(formData).map((key) => (

@@ -43,6 +43,7 @@ const api = {
 
     // Maintenance Routes
     getMaintenanceRecords: () => axios.get(`${BASE_URL}/maintenance`),
+    getMaintenanceById:(id) => axios.get(`${BASE_URL}/maintenance/${id}`),
     createMaintenanceRecord: (data) => axios.post(`${BASE_URL}/maintenance`, data),
     updateMaintenanceRecordById: (id, data) => axios.put(`${BASE_URL}/maintenance/${id}`, data),
     deleteMaintenanceRecordById: (id) => axios.delete(`${BASE_URL}/maintenance/${id}`),
@@ -51,6 +52,7 @@ const api = {
     getCounts: () => axios.get(`${BASE_URL}/count`),
     getCountByTable: (tableName) => axios.get(`${BASE_URL}/count?table=${tableName}`),
 
+    //disposal routes
     getDisposed: ()=> axios.get(`${BASE_URL}/disposal`),
     createDisposed: (data)=> axios.post(`${BASE_URL}/disposal`, data)
 };
