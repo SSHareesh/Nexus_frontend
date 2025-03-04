@@ -133,7 +133,7 @@ const handleCheckoutSubmit = async () => {
         // ✅ Step 2: Create a disposal record
         await api.createDisposed(disposalData);
 
-        alert("Asset successfully disposed.");
+        setMessage("Asset successfully disposed.");
 
         setShowDisposeModal(false);
         window.location.reload(); // Refresh page to reflect changes
