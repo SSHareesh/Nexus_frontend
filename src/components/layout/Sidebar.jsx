@@ -1,5 +1,5 @@
 import React from 'react';
-import {  Menu,Wrench, LayoutDashboard,  Monitor, FileCode,NotebookPen, Users, ClipboardList, Bell, FileText, Settings } from 'lucide-react';
+import {  Menu,Wrench, LayoutDashboard,  Monitor, FileCode,NotebookPen, Users,Trash2, Bell, FileText, Settings } from 'lucide-react';
 import NavItem from './NavItem';
 
 const navItems = [
@@ -8,9 +8,8 @@ const navItems = [
   { icon: FileCode, label: 'Software Assets', count: 0 },
   { icon: Wrench, label: 'Maintenance', count: 0 },
   { icon: Users, label: 'User Details', count: 0 },
-  { icon: NotebookPen, label: 'Audit Logs', count: 0 },
+  { icon: Trash2, label: 'Disposed', count: 0 },
   { icon: Bell, label: 'Notifications', count: 5 },
-  { icon: FileText, label: 'Report', count: 0 }
 ];
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
