@@ -30,6 +30,45 @@ const [checkoutDetails, setCheckoutDetails] = useState({
   assignedUserId: "",
 });
 
+const [showCheckinModal, setShowCheckinModal] = useState(false);
+const [checkinDetails, setCheckinDetails] = useState({
+  assetid: "",
+  checkinDate: "",
+});
+
+const handleCheckinClick = (asset) => {
+  setCheckinDetails({ assetid: asset.assetid, checkinDate: "" });
+  setShowCheckinModal(true);
+};
+
+const handleCheckinChange = (e) => {
+  const { name, value } = e.target;
+  setCheckinDetails((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleCheckinSubmit = async () => {
+  if (!checkinDetails.checkinDate) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    await api.updateAssetById(checkinDetails.assetid, {
+      check_in: checkinDetails.checkinDate,
+      status: "UnAssigned",
+      isCheckinAgain: true,
+    });
+
+
+    alert("Asset successfully checked in.");
+    setShowCheckinModal(false);
+    window.location.reload();
+  } catch (error) {
+    console.error("Error during checkin:", error);
+    alert("Failed to check in asset.");
+  }
+};
+
 const handleCheckoutClick = (asset) => {
   setCheckoutDetails({ assetid: asset.assetid, checkoutDate: "", assignedUserId: "" });
   setShowCheckoutModal(true);
@@ -126,11 +165,14 @@ const handleCheckoutSubmit = async () => {
       comments: disposalDetails.comments || "",
   };
   
-
     try {
+
+
+      await api.updateAssetById(selectedAsset.assetid, {
+        status: "Disposed"
+    });
       
 
-        // ✅ Step 2: Create a disposal record
         await api.createDisposed(disposalData);
 
         alert("Asset successfully disposed.");
@@ -283,6 +325,10 @@ const handleCheckoutSubmit = async () => {
                         if (asset.lastcheckoutdate && asset.check_in) {
                           handleCheckoutClick(asset); // Call function only if it's "Check-out Again"
                         }
+
+                        if(!asset.check_in){
+                          handleCheckinClick(asset);
+                        }
                       }}
                       className={`p-2 rounded ${
                         !asset.lastcheckoutdate
@@ -314,12 +360,12 @@ const handleCheckoutSubmit = async () => {
                     >
                       <Recycle size={18} />
                     </button>
-                    <button
+                     {/* <button
                       className="p-2 rounded bg-red-100 text-red-600 hover:bg-red-200"
                       title="Delete"
                     >
-                      <Trash2 size={18} />
-                    </button>
+                      <Trash2 size={18} /> 
+                    </button> */}
                   </td>
                 </tr>
               ))
@@ -470,9 +516,58 @@ const handleCheckoutSubmit = async () => {
   </div>
 )}
 
+{showCheckinModal && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+      <button
+        onClick={() => setShowCheckinModal(false)}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+      >
+        <X size={20} />
+      </button>
+      <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Check-in Asset</h2>
 
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Asset ID</label>
+        <input
+          type="text"
+          name="assetid"
+          value={checkinDetails.assetid}
+          readOnly
+          className="w-full px-3 py-2 border rounded-lg bg-gray-100"
+        />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1">Check-in Date</label>
+        <input
+          type="date"
+          name="checkinDate"
+          onChange={handleCheckinChange}
+          required
+          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          onClick={handleCheckinSubmit}
+          className="w-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Check-in
+        </button>
+        <button
+          onClick={() => setShowCheckinModal(false)}
+          className="w-1/2 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition ml-2"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
-  );
+  </div>
+)}
+</div>
+);
 }
   
 
