@@ -37,9 +37,8 @@ const api = {
     deleteUserById: (id) => axios.delete(`${BASE_URL}/users/${id}`),
 
     // Notification Routes
-    getNotifications: () => axios.get(`${BASE_URL}/notifications`),
-    createNotification: (data) => axios.post(`${BASE_URL}/notifications`, data),
-    deleteNotificationById: (id) => axios.delete(`${BASE_URL}/notifications/${id}`),
+    getNotifications: () => axios.get(`${BASE_URL}/notifications`),  // Fetch all notifications
+    getMaintenanceNotifications: () => axios.get(`${BASE_URL}/notifications/maintenance`),  // Fetch maintenance notifications
 
     // Maintenance Routes
     getMaintenanceRecords: () => axios.get(`${BASE_URL}/maintenance`),

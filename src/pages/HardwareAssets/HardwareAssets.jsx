@@ -175,7 +175,7 @@ const handleCheckoutSubmit = async () => {
 
         await api.createDisposed(disposalData);
 
-        alert("Asset successfully disposed.");
+        setMessage("Asset successfully disposed.");
 
         setShowDisposeModal(false);
         window.location.reload(); // Refresh page to reflect changes

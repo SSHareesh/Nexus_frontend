@@ -45,8 +45,8 @@ const NavItem = ({ icon: Icon, label, count = 0, isCollapsed }) => {
     "Software Assets": "/SoftwareAssets",
     "User Details" : "/Users",
     "Maintenance": "/MaintenanceRecords",
-    "Disposed Assets": "/disposed-assets",
-    "Reports": "/reports",
+    "Disposed" : "/HardwareAssets?filter=disposed",
+    "Notifications": "/Notifications",  
     "Settings": "/settings",
   };
 

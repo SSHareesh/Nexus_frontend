@@ -16,6 +16,7 @@ import EditUser from './pages/Users/EditUser';
 import MaintenanceRecords from './pages/Maintenance/Maintenance';
 import AddMaintenance from './pages/Maintenance/AddMaintenance';
 import EditMaintenance from './pages/Maintenance/EditMaintenance';
+import Notifications from './pages/Notifications/Notifications';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path='/MaintenanceRecords' element={<Layout><MaintenanceRecords /></Layout>} />
         <Route path='/AddMaintenance' element={<Layout><AddMaintenance /></Layout>} />
         <Route path='/EditMaintenance/:id' element={<Layout><EditMaintenance /></Layout>} />
+        <Route path='/Notifications' element={<Layout><Notifications /></Layout>} />
 
       </Routes>
     </Router>
