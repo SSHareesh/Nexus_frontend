@@ -20,7 +20,7 @@ const AddHardwareAsset = () => {
     lastCheckoutDate: "",
     size: "",
     operatingSystem: "",
-    typeOfOS: "",
+    typeofos: "",
     productKey: "",
     processor: "",
     ram: "",

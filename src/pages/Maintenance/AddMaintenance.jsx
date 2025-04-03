@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../utils/api"; 
+import api from "../../utils/api";
 
 const AddMaintenance = () => {
   const navigate = useNavigate();
-  const [error,setError] = useState("");
-  const [message,setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     assetid: "",
     issue: "",
@@ -21,20 +21,18 @@ const AddMaintenance = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value === "" ? null : value, // Convert empty strings to null
+      [name]: value === "" ? null : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     console.log("Submitting maintenance record:", formData);
-    
+
     try {
-      const response = await api.createMaintenanceRecord(formData);
-      console.log("Response:", response.data);
+      await api.createMaintenanceRecord(formData);
       setMessage("Maintenance Record Added Successfully!");
-      setTimeout(() => navigate("/MaintenanceRecords"),2000);
+      setTimeout(() => navigate("/MaintenanceRecords"), 2000);
     } catch (error) {
       console.error("Error adding maintenance record:", error.response?.data || error.message);
       setError("Failed to add maintenance record. Please try again.");
@@ -50,6 +48,7 @@ const AddMaintenance = () => {
           {message}
         </div>
       )}
+
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-lg rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.keys(formData).map((key) => (
@@ -57,14 +56,39 @@ const AddMaintenance = () => {
               <label className="block text-gray-700 font-medium capitalize">
                 {key.replace(/_/g, " ")}:
               </label>
-              <input
-                type="text"
-                name={key}
-                value={formData[key] || ""}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={`Enter ${key.replace(/_/g, " ")}`}
-              />
+
+              {/* Date picker for request_date and resolution_date */}
+              {key === "request_date" || key === "resolution_date" ? (
+                <input
+                  type="date"
+                  name={key}
+                  value={formData[key] || ""}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              ) : key === "approval_status" ? (
+                // Dropdown for approval_status
+                <select
+                  name={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  name={key}
+                  value={formData[key] || ""}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                />
+              )}
             </div>
           ))}
         </div>

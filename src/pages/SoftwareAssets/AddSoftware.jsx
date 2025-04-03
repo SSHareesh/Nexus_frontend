@@ -69,15 +69,57 @@ const AddSoftware = () => {
                                 {key.replace(/([A-Z])/g, " $1")}:
                                 {key === "softwarename" || key === "licenseduration" ? <span className="text-red-500">*</span> : ""}
                             </label>
-                            <input
-                                type="text"
-                                name={key}
-                                value={formData[key]}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder={`Enter ${key.replace(/([A-Z])/g, " $1")}`}
-                                required={key === "softwarename" || key === "licenseduration"}
-                            />
+                            {[
+                                "purchasedate", "licenseexpirydate", "licensepurchasedate", "renewaldate"
+                            ].includes(key) ? (
+                                <input
+                                    type="date"
+                                    name={key}
+                                    value={formData[key]}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required={key === "softwarename" || key === "licenseduration"}
+                                />
+                            ) : ["licensetype", "userstatus", "vendor"].includes(key) ? (
+                                <select
+                                    name={key}
+                                    value={formData[key]}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Select {key.replace(/([A-Z])/g, " $1")}</option>
+                                    {key === "licensetype" && (
+                                        <>
+                                            <option value="Perpetual">Perpetual</option>
+                                            <option value="Subscription">Subscription</option>
+                                        </>
+                                    )}
+                                    {key === "userstatus" && (
+                                        <>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </>
+                                    )}
+                                    {key === "vendor" && (
+                                        <>
+                                            <option value="Microsoft">Microsoft</option>
+                                            <option value="Adobe">Adobe</option>
+                                            <option value="Oracle">Oracle</option>
+                                            <option value="IBM">IBM</option>
+                                        </>
+                                    )}
+                                </select>
+                            ) : (
+                                <input
+                                    type="text"
+                                    name={key}
+                                    value={formData[key]}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder={`Enter ${key.replace(/([A-Z])/g, " $1")}`}
+                                    required={key === "softwarename" || key === "licenseduration"}
+                                />
+                            )}
                         </div>
                     ))}
                 </div>

@@ -21,18 +21,19 @@ const AddUser = () => {
       [name]: value === "" ? null : value, // Convert empty strings to null
     }));
   };
-  const [error,setError] = useState("");
-  const [successMessage,setSuccessMessage]=useState("");
+
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     console.log("Submitting user:", formData);
 
     try {
       const response = await api.createUser(formData);
       console.log("Response:", response.data);
       setSuccessMessage("User Added Successfully!");
-      setTimeout(() => navigate("/Users"),2000);
+      setTimeout(() => navigate("/Users"), 2000);
     } catch (error) {
       console.error("Error adding user:", error.response?.data || error.message);
       setError("Failed to add user. Please try again.");
@@ -50,27 +51,54 @@ const AddUser = () => {
           {Object.keys(formData).map((key) => (
             <div key={key}>
               <label className="block text-gray-700 font-medium capitalize">
-                {key.replace(/_/g, " ")}: 
+                {key.replace(/_/g, " ")}:
               </label>
-              <input
-                type={key === "email" ? "email" : key === "phone" ? "tel" : "text"}
-                name={key}
-                value={formData[key] || ""}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={`Enter ${key.replace(/_/g, " ")}`}
-              />
+              
+              {/* Dropdown for Status */}
+              {key === "status" ? (
+                <select
+                  name={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="On Leave">On Leave</option>
+                </select>
+              ) : key === "employee_type" ? (
+                // Dropdown for Employee Type
+                <select
+                  name={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Employee Type</option>
+                  <option value="Permanent">Permanent</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Intern">Intern</option>
+                </select>
+              ) : (
+                <input
+                  type={key === "email" ? "email" : key === "phone" ? "tel" : "text"}
+                  name={key}
+                  value={formData[key] || ""}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={`Enter ${key.replace(/_/g, " ")}`}
+                />
+              )}
             </div>
           ))}
         </div>
 
-
-          <button
-            type="submit"
-            className="px-6 py-2 mt-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-            Add User
-          </button>
-        
+        <button
+          type="submit"
+          className="px-6 py-2 mt-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
+          Add User
+        </button>
       </form>
     </div>
   );
